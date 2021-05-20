@@ -19,14 +19,6 @@ func main() {
 	fmt.Println("Please connect to\u001b[31m localhost", config.LocalhostPort, "\u001b[0m")
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets")))) // Join Assets Directory to the server
 	http.HandleFunc("/", troll)
-	http.HandleFunc("/locations", troll)
-	http.HandleFunc("/dates", troll)
-	http.HandleFunc("/bestdate", troll)
-	http.HandleFunc("/relation", troll)
-	http.HandleFunc("/artists", troll)
-	http.HandleFunc("/singleArtist", troll)
-	http.HandleFunc("/countryConcert", troll)
-	http.HandleFunc("/Loc&date", troll)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
