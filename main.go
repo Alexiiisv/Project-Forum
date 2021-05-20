@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"text/template"
 
+	uuid "github.com/satori/go.uuid"
+
 	config "./config"
 )
 
@@ -29,5 +31,28 @@ func troll(w http.ResponseWriter, r *http.Request) {
 	t := template.New("index-template")
 	t = template.Must(t.ParseFiles("index.html"))
 	t.ExecuteTemplate(w, "index", Dataa)
-	fmt.Fprintln(w, Dataa.Name)
+	uuid := GetUUID()
+	fmt.Fprintln(w, uuid)
+}
+
+func GetUUID() uuid.UUID {
+	// Creating UUID Version 4
+	// panic on error
+	u1 := uuid.Must(uuid.NewV4())
+	fmt.Printf("UUIDv4: %s\n", u1)
+
+	// or error handling
+	u2, err := uuid.NewV4()
+	if err != nil {
+		fmt.Printf("Something went wrong: %s", err)
+	}
+	fmt.Printf("UUIDv4: %s\n", u2)
+
+	// Parsing UUID from string input
+	u2, err = uuid.FromString(u1.String())
+	if err != nil {
+		fmt.Printf("Something went wrong: %s", err)
+	}
+	fmt.Printf("Successfully parsed: %s\n", u2)
+	return u2
 }
