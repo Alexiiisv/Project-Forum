@@ -1,0 +1,66 @@
+.header {
+    background: transparent;
+    position: fixed;
+    width: 100vw;
+    z-index: 1;
+}
+.groupie-tracker {
+    display: flex;
+    justify-content: space-evenly;
+    height: 60px;
+    position: relative;
+}
+.logo {
+    height: 30px;
+    width: 40px;
+}
+.GT {
+    margin-left: 15px;
+}
+.home-page {
+    height: 100%;
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1;
+}
+.pages-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pages {
+    display: flex;
+    height: 100%;
+}
+.pages div {
+    font-size: 20px;
+    padding: 0px 15px 0 15px;
+    height: 95%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+.pages a {
+    height: 95%;
+    display: flex;
+    align-items: center;
+}
+.pages a:hover {
+    border-bottom: solid 3px blue;
+}
+.active {
+    border-bottom: solid 3px blue;
+}
+.icon {
+    height: 20px;
+    margin: 0px 10px 0px 20px;
+}
+.u-scrolled {
+    background-color: white;
+    border-bottom: solid 1px black;
+    transition: 0.7s;
+}

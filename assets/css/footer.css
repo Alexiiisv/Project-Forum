@@ -1,0 +1,32 @@
+.footer {
+    height: 300px;
+    width: 100vw;
+    background-color: rgb(44,44,44);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.footer-container {
+    height: 70%;
+    width: 1500px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: start;
+}
+.footer p, .footer h3, .footer a {
+    color: white;
+    margin: 0px 0px 15px 0px;
+    font-family: system-ui;
+}
+.footer p {
+    cursor: pointer;
+    text-align: left;
+}
+.logo-footer img {
+    height: 50px;
+}
+.os img {
+    border-radius: 10px;
+    cursor: pointer;
+    height: 50px;
+}

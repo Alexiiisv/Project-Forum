@@ -1,2 +1,4 @@
 -- SQLite
-DELETE from "tablename"; -- tablename table a vider
+        -- Account,Accounts 
+        --  ˇˇˇˇˇˇˇ
+DELETE from Accounts; 

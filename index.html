@@ -8,29 +8,14 @@
     <title>Project Forum</title>
   </head>
   <body>
+    {{template "header"}}
     <div class="page-index">
       <div class="title">
         <h1>Project Forum</h1>
         <h2>Talk with your friend there</h2>
-        <form action="/lel" method="POST">
-        <input type="text" placeholder="Name" name="Name">
-        
+        <form action="/accounts" method="POST">
+          <input type="submit" value="Show All Account" name="Name">
         </form>
-        {{ $length := len .}}
-        {{if gt $length 1}}
-        <div class="allAccount">
-          {{range .}}
-            <div class="a">
-              <p>{{.Name}}</p>
-              <p>{{.Uuid}}</p>
-            </div>
-          {{end}}
-        </div>
-        {{else}}
-          <div class="a">
-          <p>{{.Name}}</p>
-          </div>
-        {{end}}
       </div>
     </div
   </body>

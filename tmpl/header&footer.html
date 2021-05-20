@@ -1,0 +1,96 @@
+<!-----------------
+  CONTENT POUR LE HEADER
+ ----------------->
+ {{define "header"}}
+ <link rel="stylesheet" href="../assets/css/header.css" />
+ <div class="header">
+   <div class="groupie-tracker">
+     <a href="index.html" class="home-page">
+       <div href="index.html" class="GT">Project Forum</div>
+     </a>
+     <div class="pages-container">
+       <div class="pages">
+         <div class="location">
+           <a id="location" href="accounts">All Accounts</a>
+         </div>
+         <div class="groups">
+           <a id="artists" href="artists">Artists</a>
+         </div>
+         <div class="dates">
+           <a id="dates" href="dates">Dates</a>
+         </div>
+         <div class="relation">
+           <a id="relation" href="login">Login</a>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ {{end}}
+ 
+<!-----------------
+  CONTENT POUR LE FOOTER
+ ----------------->
+{{define "footer"}}
+<link rel="stylesheet" href="../assets/css/footer.css" />
+<div class="footer">
+  <div class="footer-container">
+    <div class="first-column">
+      <div class="logo-footer">
+        <img src="../assets/image/logo-GT.png" alt="logo" />
+      </div>
+      <a target="_blank" href="https://git.ytrack.learn.ynov.com/SDOCKX/groupie-tracker">GitHub</a>
+      <p></p>
+      <a target="_blank" href="https://ytrack.learn.ynov.com/intra/pyc/div-01/groupie-tracker">Ytrack</a>
+      <p></p>
+      <a target="_blank" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">More Info</a>
+    </div>
+    <div class="second-column">
+      <div class="s-column">
+        <h3>Development team</h3>
+        <p>Elodie Senel</p>
+        <p>Duane Estrade</p>
+        <p>Sven Dockx</p>
+        <p>Alexis Velleine</p>
+      </div>
+    </div>
+    <div class="third-column">
+      <div class="s-column">
+        <h3>Network</h3>
+        <a target="_blank" href="https://www.linkedin.com/in/elodie-senel-72a0131b7/">Elodie Senel</a>
+        <p></p>
+        <a target="_blank" href="https://www.linkedin.com/in/duane-estrade-2a4239212/">Duane Estrade</a>
+        <p></p>
+        <a target="_blank" href="https://www.linkedin.com/in/sven-dockx-38598516a/">Sven Dockx</a>
+        <p></p>
+        <a target="_blank" href="https://www.linkedin.com/in/alexis-velleine-2421901a3/">Alexis Velleine</a>
+        <p></p>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}
+
+<!-----------------
+  CONTENT POUR LA PAGE 404
+ ----------------->
+{{define "not-found"}}<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="../assets/image/logo-GT.png" />
+    <title>Groupie Tracker</title>
+    <link rel="stylesheet" href="../assets/css/singleArtist.css" />
+    <link rel="stylesheet" href="../assets/css/not-found.css" />
+    <style></style>
+  </head>
+  <body>
+<h1>&lt;h1&gt;Error 404&lt;/h1&gt;</h1>
+<h2>&lt;h2&gt;Not Found&lt;/h2&gt;</h2>
+<p>&lt;p&gt;What you're looking for does not exist&lt;/p&gt;</p>
+<p>&lt;a href="index.html"&gt;<a href="index.html">Return to Home</a>&lt;/a&gt;</p>
+  </body>
+</html>
+{{end}}

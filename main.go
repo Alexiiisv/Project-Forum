@@ -1,4 +1,5 @@
-package main //Main code used to run the server
+package main
+
 import (
 	"database/sql"
 	"fmt"
@@ -8,47 +9,81 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 
+	hash "golang.org/x/crypto/bcrypt"
+
 	_ "github.com/mattn/go-sqlite3"
 
 	config "./config"
 )
 
-type Data struct {
-	Name string
-	Uuid uuid.UUID
+//basic struct
+type DataSend struct {
+	Name     string
+	Password string
+	Email    string
+	Uuid     uuid.UUID
 }
 
-var Dataa Data
-var Dataarray []Data
+//const for hashing
+const (
+	MinCost     int = 4  // the minimum allowable cost as passed in to GenerateFromPassword
+	MaxCost     int = 31 // the maximum allowable cost as passed in to GenerateFromPassword
+	DefaultCost int = 10 // the cost that will actually be set if a cost below MinCost is passed into GenerateFromPassword
+)
+
+var Data DataSend
+var Dataarray []DataSend
 var firstinit bool
 
 func main() {
-
 	fmt.Println("Please connect to\u001b[31m localhost", config.LocalhostPort, "\u001b[0m")
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets")))) // Join Assets Directory to the server
-	http.HandleFunc("/", troll1)
-	http.HandleFunc("/lel", troll2)
+	http.HandleFunc("/", index)
+	http.HandleFunc("/accounts", ShowAccount)
+	http.HandleFunc("/login", Login)
+	http.HandleFunc("/log", CreateAccount)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
 
-func troll1(w http.ResponseWriter, r *http.Request) {
+//page index (main page)
+func index(w http.ResponseWriter, r *http.Request) {
 	t := template.New("index-template")
-	t = template.Must(t.ParseFiles("index.html"))
+	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "index", Dataarray)
 	// saveUuid()
 }
 
-
-func troll2(w http.ResponseWriter, r *http.Request) {
+//create account with value from page
+func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	NameChoosen := r.FormValue("Name")
-	Dataarray = append(Dataarray, Data{NameChoosen, GetUUID()})
+	Password := r.FormValue("Password")
+	Email := r.FormValue("Email")
+	Dataarray = readUuid()
+	Dataarray = append(Dataarray, DataSend{NameChoosen, Password, Email, GetUUID()})
+	fmt.Println(string(HashPassword(Dataarray[len(Dataarray)-1].Password)))
+	saveUuid("accounts")
 	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/account.html"))
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Dataarray)
-	saveUuid("Account")
+}
+
+//page to show all accounts existing
+func ShowAccount(w http.ResponseWriter, r *http.Request) {
+	Dataarray = nil
+	Dataarray = readUuid()
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "account", Dataarray)
+}
+
+//page login
+func Login(w http.ResponseWriter, r *http.Request) {
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/login.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "login", Dataarray)
 }
 
 //give a unique uuid to a user
@@ -57,11 +92,11 @@ func GetUUID() uuid.UUID {
 	// panic on error
 	var u1 uuid.UUID
 	// if Dataa[len(Dataa)].Uuid == uuid.Nil {
-		u1 = uuid.Must(uuid.NewV4())
+	u1 = uuid.Must(uuid.NewV4())
 	// } else {
 	// 	u1 = Dataa[len(Dataa)].Uuid
 	// }
-	
+
 	u2, err := uuid.FromString(u1.String())
 	if err != nil {
 		fmt.Printf("Something went wrong: %s", err)
@@ -77,35 +112,65 @@ func saveUuid(state string) {
 	}
 	defer db.Close()
 
-	if state == "Account" {
-		stmt, _ := db.Prepare("insert into Account(id, name, uuid) values(?, ?, ?)")
+	if state == "accounts" {
+		stmt, err := db.Prepare("insert into Accounts(Id, Name, Password, Email, Uuid) values(?, ?, ?, ?, ?)")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println((Dataarray))
 		for index := range Dataarray {
 			if UserExists(db, Dataarray[index].Uuid.String()) {
 				continue
 			}
-			_, _ = stmt.Exec(GetCount("Account", db), Dataarray[index].Name, Dataarray[index].Uuid.String())
+			_, _ = stmt.Exec(GetCount("Accounts", db), Dataarray[index].Name, Dataarray[index].Password, Dataarray[index].Email, Dataarray[index].Uuid.String())
 		}
 	}
 }
 
-func GetCount(schemadottablename string, db *sql.DB) int {
-    var cnt int
-    _ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
-    return cnt 
+//read database/store value from database to go code
+func readUuid() []DataSend {
+	db, err := sql.Open("sqlite3", "./Database/User.db")
+	sql_readall := `SELECT Name, Password, Email, Uuid FROM Accounts`
+
+	rows, err := db.Query(sql_readall)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	var result []DataSend
+	for rows.Next() {
+		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid)
+		result = append(result, Data)
+	}
+	return result
 }
 
-func UserExists(db * sql.DB, uuid string) bool {
-    sqlStmt := `SELECT uuid FROM Account WHERE uuid = ?`
-    err := db.QueryRow(sqlStmt, uuid).Scan(&uuid)
-    if err != nil {
-        if err != sql.ErrNoRows {
-            // a real error happened! you should change your function return
-            // to "(bool, error)" and return "false, err" here
-            log.Print(err)
-        }
+//get the length of a table
+func GetCount(schemadottablename string, db *sql.DB) int {
+	var cnt int
+	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
+	return cnt
+}
 
-        return false
-    }
+//check if an account exist
+func UserExists(db *sql.DB, uuid string) bool {
+	sqlStmt := `SELECT Uuid FROM Accounts WHERE Uuid = ?`
+	err := db.QueryRow(sqlStmt, uuid).Scan(&uuid)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			// a real error happened! you should change your function return
+			// to "(bool, error)" and return "false, err" here
+			log.Print(err)
+		}
+		return false
+	}
+	return true
+}
 
-    return true
+//crypt password
+func HashPassword(passwd string) []byte {
+	has, _ := hash.GenerateFromPassword([]byte(passwd), DefaultCost)
+
+	return has
 }
