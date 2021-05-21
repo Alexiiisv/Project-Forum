@@ -174,3 +174,9 @@ func HashPassword(passwd string) []byte {
 
 	return has
 }
+
+func CheckPasswordHash(password string, hashpass string) bool {
+	var err error
+    err = hash.CompareHashAndPassword([]byte(hashpass), []byte(password))
+    return err == nil
+}
