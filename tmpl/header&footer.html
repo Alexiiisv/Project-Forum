@@ -1,33 +1,39 @@
 <!-----------------
   CONTENT POUR LE HEADER
  ----------------->
- {{define "header"}}
- <link rel="stylesheet" href="../assets/css/header.css" />
- <div class="header">
-   <div class="groupie-tracker">
-     <a href="index.html" class="home-page">
+{{define "header"}}
+<link rel="stylesheet" href="../assets/css/header.css" />
+<div class="header">
+  <div class="project-forum">
+    
+    <!-- <a href="index.html" class="home-page">
        <div href="index.html" class="GT">Project Forum</div>
-     </a>
-     <div class="pages-container">
-       <div class="pages">
-         <div class="location">
-           <a id="location" href="accounts">All Accounts</a>
-         </div>
-         <div class="groups">
-           <a id="artists" href="artists">Artists</a>
-         </div>
-         <div class="dates">
-           <a id="dates" href="dates">Dates</a>
-         </div>
-         <div class="relation">
-           <a id="relation" href="login">Login</a>
-         </div>
-       </div>
-     </div>
-   </div>
- </div>
- {{end}}
- 
+     </a> -->
+     <div class="highlight">
+      <a class="button" href="index.html" class="home-page">
+        <div href="index.html" class="GT">Accueil</div>
+      </a>
+    </div>
+    <div class="pages-container">
+      <div class="pages">
+        <div class="location">
+          <a id="location" href="accounts">All Accounts</a>
+        </div>
+        <div class="groups">
+          <a id="artists" href="artists">Artists</a>
+        </div>
+        <div class="dates">
+          <a id="dates" href="dates">Dates</a>
+        </div>
+        <div class="relation">
+          <a id="relation" href="login">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}
+
 <!-----------------
   CONTENT POUR LE FOOTER
  ----------------->
@@ -74,23 +80,27 @@
 <!-----------------
   CONTENT POUR LA PAGE 404
  ----------------->
-{{define "not-found"}}<!DOCTYPE html>
+{{define "not-found"}}
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="../assets/image/logo-GT.png" />
-    <title>Groupie Tracker</title>
-    <link rel="stylesheet" href="../assets/css/singleArtist.css" />
-    <link rel="stylesheet" href="../assets/css/not-found.css" />
-    <style></style>
-  </head>
-  <body>
-<h1>&lt;h1&gt;Error 404&lt;/h1&gt;</h1>
-<h2>&lt;h2&gt;Not Found&lt;/h2&gt;</h2>
-<p>&lt;p&gt;What you're looking for does not exist&lt;/p&gt;</p>
-<p>&lt;a href="index.html"&gt;<a href="index.html">Return to Home</a>&lt;/a&gt;</p>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="../assets/image/logo-GT.png" />
+  <title>Groupie Tracker</title>
+  <link rel="stylesheet" href="../assets/css/singleArtist.css" />
+  <link rel="stylesheet" href="../assets/css/not-found.css" />
+  <style></style>
+</head>
+
+<body>
+  <h1>&lt;h1&gt;Error 404&lt;/h1&gt;</h1>
+  <h2>&lt;h2&gt;Not Found&lt;/h2&gt;</h2>
+  <p>&lt;p&gt;What you're looking for does not exist&lt;/p&gt;</p>
+  <p>&lt;a href="index.html"&gt;<a href="index.html">Return to Home</a>&lt;/a&gt;</p>
+</body>
+
 </html>
 {{end}}

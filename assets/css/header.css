@@ -4,7 +4,7 @@
     width: 100vw;
     z-index: 1;
 }
-.groupie-tracker {
+.project-forum {
     display: flex;
     justify-content: space-evenly;
     height: 60px;
@@ -64,3 +64,35 @@
     border-bottom: solid 1px black;
     transition: 0.7s;
 }
+
+/* HIGHLIGHT */
+.highlight .button {
+    right: 150%;
+    display: inline-block;
+    color: white;
+    background: mediumslateblue;
+    margin: 20px;
+    width: 130px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.highlight .button:before {
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: -80px;
+    height: 100px;
+    width: 70px;
+    background: rgba(255, 255, 255, .7);
+    transform: rotate(20deg);
+}
+
+.highlight .button:hover:before {
+    left: 150px;
+    transition: all .5s;
+}
+.highlight {margin-bottom:100px;}
