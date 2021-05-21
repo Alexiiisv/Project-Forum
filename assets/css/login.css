@@ -8,8 +8,7 @@ body, * {
 }
 .page-index {
     width: 100vw;
-    height: 2150px;
-    /* background-color: black; */
+    height: 800px;
     display: block;
     justify-content: center;
     align-items: center;
@@ -20,15 +19,17 @@ body, * {
     height: 100px;
 }
 .form {
+    position: absolute;
+    width: 670px;
+    right: 250px;
     height: 200px;
     display: flex;
-    justify-content: center;
     align-items: center;
     align-content: space-between;
-    border: black 1px;
     margin: 250px 20px 20px 20px;
-    border: solid 2px black;
+    border: solid 3px black;
     border-radius: 10px;
+    justify-content: center;
 }
 .button {
     height: 100px;
@@ -41,4 +42,26 @@ body, * {
     flex-direction: column;
     transform: translate(0px, 198px);
     align-items: center;
+}
+.message {
+    position: absolute;
+    top: 510px;
+    left: 306px;
+    width: 375px;
+    border: black 3px solid;
+    border-radius: 20px;
+    padding: 5px 5px 5px 5px;
+    display: flex;
+    justify-content: right;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    flex-direction: column;
+}
+.buttoninput {
+    font-size: 17px;
+}
+.inputbtn {
+    position: absolute;
+    left: 273px;
+    top: 132px;
 }

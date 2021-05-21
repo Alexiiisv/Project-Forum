@@ -31,6 +31,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: -156px;
 }
 .pages {
     display: flex;
@@ -65,34 +66,18 @@
     transition: 0.7s;
 }
 
-/* HIGHLIGHT */
-.highlight .button {
-    right: 150%;
-    display: inline-block;
-    color: white;
-    background: mediumslateblue;
-    margin: 20px;
-    width: 130px;
-    height: 40px;
-    line-height: 40px;
+.test {
+    margin: 15px 0px 0px -100px;
+    border: black 2px solid;
     border-radius: 10px;
-    position: relative;
-    overflow: hidden;
+    min-width: 100px;
+}
+.testt {
+
 }
 
-.highlight .button:before {
-    content: "";
-    position: absolute;
-    top: -30px;
-    left: -80px;
-    height: 100px;
-    width: 70px;
-    background: rgba(255, 255, 255, .7);
-    transform: rotate(20deg);
+.testtt {
+    font-size: 21px;
+    padding-top: 4px;
+    padding-left: 14px;
 }
-
-.highlight .button:hover:before {
-    left: 150px;
-    transition: all .5s;
-}
-.highlight {margin-bottom:100px;}
