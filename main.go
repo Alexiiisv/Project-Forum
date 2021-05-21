@@ -24,6 +24,15 @@ type DataSend struct {
 	Uuid     uuid.UUID
 }
 
+type LoginYes struct {
+	Connected bool
+	Account Account
+}
+
+type Account struct {
+	Data DataSend
+}
+
 //const for hashing
 const (
 	MinCost     int = 4  // the minimum allowable cost as passed in to GenerateFromPassword
@@ -33,7 +42,8 @@ const (
 
 var Data DataSend
 var Dataarray []DataSend
-var firstinit bool
+var Logged LoginYes
+var Name, Password string
 
 func main() {
 	fmt.Println("Please connect to\u001b[31m localhost", config.LocalhostPort, "\u001b[0m")
@@ -42,7 +52,8 @@ func main() {
 	http.HandleFunc("/accounts", ShowAccount)
 	http.HandleFunc("/login", Login)
 	http.HandleFunc("/register", Register)
-	http.HandleFunc("/log", CreateAccount)
+	http.HandleFunc("/createAcc", CreateAccount)
+	http.HandleFunc("/connect", LoggedOn)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -54,7 +65,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 	t := template.New("index-template")
 	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "index", Dataarray)
-	// saveUuid()
 }
 
 //create account with value from page
@@ -62,18 +72,14 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	NameChoosen := r.FormValue("Name")
 	Password := r.FormValue("Password")
 	Email := r.FormValue("Email")
-	Dataarray = readUuid()
 	Dataarray = append(Dataarray, DataSend{NameChoosen, Password, Email, GetUUID()})
-	fmt.Println(string(HashPassword(Dataarray[len(Dataarray)-1].Password)))
 	saveUuid("accounts")
-	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "account", Dataarray)
+	ShowAccount(w, r)
 }
 
 //page to show all accounts existing
 func ShowAccount(w http.ResponseWriter, r *http.Request) {
-	Dataarray = readUuid()
+	Dataarray = readUuid("ShowAccount")
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Dataarray)
@@ -83,7 +89,7 @@ func ShowAccount(w http.ResponseWriter, r *http.Request) {
 func Login(w http.ResponseWriter, r *http.Request) {
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "login", Dataarray)
+	t.ExecuteTemplate(w, "login", Logged)
 }
 
 //page login
@@ -91,6 +97,19 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "register", Dataarray)
+}
+
+func LoggedOn(w http.ResponseWriter, r *http.Request) {
+	Name = r.FormValue("Name")
+	Password = r.FormValue("Password")
+	Dataarray = readUuid("LoggedOn")
+	Logged.Account.Data = Dataarray[0]
+	Logged.Connected = true
+	fmt.Println(Logged)
+
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "login", Logged)
 }
 
 //give a unique uuid to a user
@@ -129,14 +148,14 @@ func saveUuid(state string) {
 			if UserExists(db, Dataarray[index].Uuid.String()) {
 				continue
 			}
-			result, _ := stmt.Exec(Dataarray[index].Name, Dataarray[index].Password, Dataarray[index].Email, Dataarray[index].Uuid.String())
+			result, _ := stmt.Exec(Dataarray[index].Name, string(HashPassword(Dataarray[len(Dataarray)-1].Password)), Dataarray[index].Email, Dataarray[index].Uuid.String())
 			fmt.Println("resultat ", result)
 		}
 	}
 }
 
 //read database/store value from database to go code
-func readUuid() []DataSend {
+func readUuid(state string) []DataSend {
 	db, err := sql.Open("sqlite3", "./Database/User.db")
 	if err != nil {
 		log.Fatal(err)
@@ -152,7 +171,13 @@ func readUuid() []DataSend {
 	var result []DataSend
 	for rows.Next() {
 		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid)
-		result = append(result, Data)
+		if state == "LoggedOn" && CheckPasswordHash(Password, Data.Password) {
+			Data.Password = Password
+			result = append(result, Data)
+			break
+		} else if state == "ShowAccount" {
+			result = append(result, Data)
+		}
 	}
 	return result
 }

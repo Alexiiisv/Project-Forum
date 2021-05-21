@@ -21,12 +21,23 @@
             <p>You don't have an account ?</p>
             <a href="/register" class="button">Click there to Create an account</a>
         </div>
-        <div class="form">
-            <form action="/log" method="POST">
-                <input type="text" placeholder="Name" name="Name" required>
-                <input type="password" placeholder="Password" name="Password" required>
-                <input type="submit" value="Login In">
-            </form>
+        <div class="place">
+            {{$size := len .Account.Data.Name}}
+            {{if gt $size 0}}
+                <div class="message">
+                    <h3>{{.Account.Data.Name}}</h3>
+                    <p>{{.Account.Data.Password}}</p>
+                    <p>{{.Account.Data.Email}}</p>
+                    <p>{{.Account.Data.Uuid}}</p>
+                </div>
+            {{end}}
+            <div class="form">
+                <form action="/connect" method="POST">
+                    <input type="text" placeholder="Name" name="Name" required>
+                    <input type="password" placeholder="Password" name="Password" required>
+                    <input type="submit" value="Login In">
+                </form>
+            </div>
         </div>
     </div
 </body>
@@ -66,7 +77,7 @@
                 <p id="length" class="invalid">Minimum <b>8 characters</b></p>
             </div>
             <div class="form">
-            <form action="/log" method="POST">
+            <form action="/createAcc" method="POST">
                 <div class="input">
                     <input type="text" placeholder="Name" name="Name"
                 pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" required>
