@@ -41,6 +41,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/accounts", ShowAccount)
 	http.HandleFunc("/login", Login)
+	http.HandleFunc("/register", Register)
 	http.HandleFunc("/log", CreateAccount)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
@@ -72,7 +73,6 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 //page to show all accounts existing
 func ShowAccount(w http.ResponseWriter, r *http.Request) {
-	Dataarray = nil
 	Dataarray = readUuid()
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
@@ -82,8 +82,15 @@ func ShowAccount(w http.ResponseWriter, r *http.Request) {
 //page login
 func Login(w http.ResponseWriter, r *http.Request) {
 	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/login.html", "./tmpl/header&footer.html"))
+	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "login", Dataarray)
+}
+
+//page login
+func Register(w http.ResponseWriter, r *http.Request) {
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "register", Dataarray)
 }
 
 //give a unique uuid to a user
@@ -122,7 +129,8 @@ func saveUuid(state string) {
 			if UserExists(db, Dataarray[index].Uuid.String()) {
 				continue
 			}
-			_, _ = stmt.Exec(GetCount("Accounts", db), Dataarray[index].Name, Dataarray[index].Password, Dataarray[index].Email, Dataarray[index].Uuid.String())
+			result, _ := stmt.Exec(GetCount("Accounts", db), Dataarray[index].Name, Dataarray[index].Password, Dataarray[index].Email, Dataarray[index].Uuid.String())
+			fmt.Println("resultat ", result)
 		}
 	}
 }
@@ -163,8 +171,10 @@ func UserExists(db *sql.DB, uuid string) bool {
 			// to "(bool, error)" and return "false, err" here
 			log.Print(err)
 		}
+		fmt.Println("faux ", uuid)
 		return false
 	}
+	fmt.Println("vrai ", uuid)
 	return true
 }
 
@@ -177,6 +187,6 @@ func HashPassword(passwd string) []byte {
 
 func CheckPasswordHash(password string, hashpass string) bool {
 	var err error
-    err = hash.CompareHashAndPassword([]byte(hashpass), []byte(password))
-    return err == nil
+	err = hash.CompareHashAndPassword([]byte(hashpass), []byte(password))
+	return err == nil
 }

@@ -1,0 +1,73 @@
+{{define "login"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/login.css">
+    <title>Project Forum</title>
+</head>
+
+<body>
+    {{template "header"}}
+    <div class="page-index">
+        <div class="title">
+            <h1>Project Forum login</h1>
+            <h2>Talk with your friend there</h2>
+        </div>
+        <div class="switch">
+            <p>You don't have an account ?</p>
+            <a href="/register" class="button">Click there to Create an account</a>
+        </div>
+        <div class="form">
+            <form action="/log" method="POST">
+                <input type="text" placeholder="Name" name="Name" required>
+                <input type="password" placeholder="Password" name="Password" required>
+                <input type="submit" value="Create Account">
+            </form>
+        </div>
+    </div
+</body>
+</html>
+{{end}}
+
+{{define "register"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/login.css">
+    <title>Project Forum</title>
+</head>
+
+<body>
+    {{template "header"}}
+    <div class="page-index">
+        <div class="title">
+            <h1>Project Forum register</h1>
+            <h2>Talk with your friend there</h2>
+        </div>
+        <div class="switch">
+            <p>You don't have an account ?</p>
+            <a href="/login" class="button">Click there to Create an account</a>
+        </div>
+        <div class="form">
+            <form action="/log" method="POST">
+                <input type="text" placeholder="Name" name="Name"
+                pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" required>
+                <input type="password" placeholder="Password" name="Password" 
+                pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$" required>
+                <input type="email" placeholder="example@gmail.com" name="Email"
+                pattern= "/^(|(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6})$/i" required>
+                <input type="submit" value="Create Account">
+            </form>
+        </div>
+    </div 
+</body>
+</html>
+{{end}}
