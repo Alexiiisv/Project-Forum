@@ -97,9 +97,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 func GetUUID() uuid.UUID {
 	// Creating UUID Version 4
 	// panic on error
-	var u1 uuid.UUID
+	//var u1 uuid.UUID
 	// if Dataa[len(Dataa)].Uuid == uuid.Nil {
-	u1 = uuid.Must(uuid.NewV4())
+	var u1 uuid.UUID = uuid.Must(uuid.NewV4())
 	// } else {
 	// 	u1 = Dataa[len(Dataa)].Uuid
 	// }
@@ -138,6 +138,9 @@ func saveUuid(state string) {
 //read database/store value from database to go code
 func readUuid() []DataSend {
 	db, err := sql.Open("sqlite3", "./Database/User.db")
+	if err != nil {
+		log.Fatal(err)
+	}
 	sql_readall := `SELECT Name, Password, Email, Uuid FROM Accounts`
 
 	rows, err := db.Query(sql_readall)
@@ -183,12 +186,10 @@ func UserExists(db *sql.DB, uuid string) bool {
 //crypt password
 func HashPassword(passwd string) []byte {
 	has, _ := hash.GenerateFromPassword([]byte(passwd), DefaultCost)
-
 	return has
 }
 
 func CheckPasswordHash(password string, hashpass string) bool {
-	var err error
-	err = hash.CompareHashAndPassword([]byte(hashpass), []byte(password))
+	var err error = hash.CompareHashAndPassword([]byte(hashpass), []byte(password))
 	return err == nil
 }
