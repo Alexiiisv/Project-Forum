@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"text/template"
 
-	uuid "github.com/satori/go.uuid"
+	uuid "github.com/gofrs/uuid"
 
 	hash "golang.org/x/crypto/bcrypt"
 
 	_ "github.com/mattn/go-sqlite3"
 
-	config "./config"
+	config "github.com/Alexiiisv/Project-Forum/v2/config"
 )
 
 //basic struct
