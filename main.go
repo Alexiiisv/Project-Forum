@@ -120,7 +120,7 @@ func saveUuid(state string) {
 	defer db.Close()
 
 	if state == "accounts" {
-		stmt, err := db.Prepare("insert into Accounts(Id, Name, Password, Email, Uuid) values(?, ?, ?, ?, ?)")
+		stmt, err := db.Prepare("insert into Accounts(Name, Password, Email, Uuid) values(?, ?, ?, ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -129,7 +129,7 @@ func saveUuid(state string) {
 			if UserExists(db, Dataarray[index].Uuid.String()) {
 				continue
 			}
-			result, _ := stmt.Exec(GetCount("Accounts", db), Dataarray[index].Name, Dataarray[index].Password, Dataarray[index].Email, Dataarray[index].Uuid.String())
+			result, _ := stmt.Exec(Dataarray[index].Name, Dataarray[index].Password, Dataarray[index].Email, Dataarray[index].Uuid.String())
 			fmt.Println("resultat ", result)
 		}
 	}
@@ -154,12 +154,14 @@ func readUuid() []DataSend {
 	return result
 }
 
-//get the length of a table
+/*
+// //get the length of a table
 func GetCount(schemadottablename string, db *sql.DB) int {
 	var cnt int
 	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
 	return cnt
 }
+*/
 
 //check if an account exist
 func UserExists(db *sql.DB, uuid string) bool {
