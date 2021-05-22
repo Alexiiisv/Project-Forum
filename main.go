@@ -51,6 +51,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/accounts", ShowAccount)
 	http.HandleFunc("/login", Login)
+	http.HandleFunc("/logout", Logout)
 	http.HandleFunc("/register", Register)
 	http.HandleFunc("/createAcc", CreateAccount)
 	http.HandleFunc("/connect", LoggedOn)
@@ -105,6 +106,16 @@ func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	Dataarray = readUuid("LoggedOn")
 	Logged.Account.Data = Dataarray[0]
 	Logged.Connected = true
+	fmt.Println(Logged)
+
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "login", Logged)
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+	Logged.Account = Account{}
+	Logged.Connected = false
 	fmt.Println(Logged)
 
 	t := template.New("account-template")

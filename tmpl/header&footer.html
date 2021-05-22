@@ -22,9 +22,15 @@
         <div class="dates">
           <a id="dates" href="dates">Dates</a>
         </div>
-        <div class="relation">
-          <a id="relation" href="login">{{.signInsignOut}}</a>
+        {{if .Connected}}
+        <div class="logout">
+          <a id="logout" href="logout">logout</a>
         </div>
+        {{else}}
+        <div class="login">
+          <a id="login" href="login">Login</a>
+        </div>
+        {{end}}
       </div>
     </div>
   </div>
