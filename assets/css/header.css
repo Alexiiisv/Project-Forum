@@ -37,7 +37,7 @@
     display: flex;
     height: 100%;
 }
-.pages div {
+.pages div:not(.hide) {
     font-size: 20px;
     padding: 0px 15px 0 15px;
     height: 95%;
@@ -45,12 +45,12 @@
     align-items: center;
     overflow: hidden;
 }
-.pages a {
+.pages a:not(.hide) {
     height: 95%;
     display: flex;
     align-items: center;
 }
-.pages a:hover {
+.pages a:hover:not(.hide) {
     border-bottom: solid 3px blue;
 }
 .active {
@@ -80,4 +80,16 @@
     font-size: 21px;
     padding-top: 4px;
     padding-left: 14px;
+}
+.hide {
+    display: none;
+    top: 34px;
+    position: absolute;
+    right: 410px;
+}
+.on {
+    display: block;
+}
+.off {
+    display: none;
 }
