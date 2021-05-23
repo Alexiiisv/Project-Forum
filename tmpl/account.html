@@ -1,4 +1,7 @@
-{{define "account"}}<!DOCTYPE html>
+<!--
+    Template for all accounts
+-->
+{{define "accounts"}}<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -27,6 +30,42 @@
                 </div>
             </div>
             {{end}}
+    </div
+</body>
+<script src="assets/js/index.js"></script>
+</html>
+{{end}}
+
+<!--
+    Template for a single account
+-->
+{{define "account"}}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/account.css">
+    <title>Project Forum</title>
+</head>
+<body>
+    {{template "header"}}
+    <div class="page-index">
+        <div class="title">
+            <h1>Account</h1>
+            <h2>Informations about your account</h2>
+        </div>
+            <div class="Info">
+                <div class="account">
+                    <div class="essential">
+                        <h3>{{.Account.Data.Name}}</h3></div>
+                    <div class="less-essential">
+                        <p>{{.Account.Data.Password}}</p>
+                        <p>{{.Account.Data.Email}}</p>
+                        <p>{{.Account.Data.Uuid}}</p>
+                    </div>
+                </div>
+            </div>
     </div
 </body>
 <script src="assets/js/index.js"></script>

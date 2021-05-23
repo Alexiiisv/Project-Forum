@@ -52,6 +52,7 @@ func main() {
 	http.HandleFunc("/accounts", ShowAccount)
 	http.HandleFunc("/login", Login)
 	http.HandleFunc("/logout", Logout)
+	http.HandleFunc("/information", Info)
 	http.HandleFunc("/register", Register)
 	http.HandleFunc("/createAcc", CreateAccount)
 	http.HandleFunc("/connect", LoggedOn)
@@ -83,7 +84,14 @@ func ShowAccount(w http.ResponseWriter, r *http.Request) {
 	Dataarray = readUuid("ShowAccount")
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "account", Dataarray)
+	t.ExecuteTemplate(w, "accounts", Dataarray)
+}
+
+//page to show all accounts existing
+func Info(w http.ResponseWriter, r *http.Request) {
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "account", Logged)
 }
 
 //page login

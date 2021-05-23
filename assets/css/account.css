@@ -1,0 +1,55 @@
+body, * {
+    margin: 0;
+    padding: 0;
+    font-family: cursive;
+    color: black;
+    text-decoration: none;
+    overflow-x: hidden;
+}
+.page-index {
+    width: 100vw;
+    height: 2150px;
+    /* background-color: black; */
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+.title {
+    text-align: center;
+    transform: translate(0px, 130px);
+    height: 100px;
+}
+.Info {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+.less-essential {
+    width: 350px;
+    margin: 20px 20px 20px 20px;
+    border: solid 2px black;
+    border-radius: 10px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+.essential {
+    margin: 150px 0px 120px 0px;
+    width: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.account {
+    display: flex;
+    margin-top: 12%;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 200px;
+}

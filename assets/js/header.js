@@ -1,5 +1,6 @@
 var btn = document.querySelector(".info");
 var toshow = document.querySelector(".hide");
+toshow.classList.add("off");
 btn.addEventListener("mouseover", event => {
     toshow.classList.add("on");
     toshow.classList.remove("off");

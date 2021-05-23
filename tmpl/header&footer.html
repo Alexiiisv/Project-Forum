@@ -23,18 +23,20 @@
           <a id="dates" href="dates">Dates</a>
         </div>
         {{if .Connected}}
-        <div class="info">info</div>
+        <div class="info">
+          <a id="Info" href="information">Info</a>
+        </div>
         {{else}}
         <div class="login">
           <a id="login" href="login">Login</a>
         </div>
         {{end}}
-        <div class="hide">
-          <a id="logout" href="logout">logout</a>
-        </div>
       </div>
     </div>
   </div>
+  <div class="hide">
+          <a id="logout" href="logout">logout</a>
+        </div>
 <script type="text/javascript" src="../assets/js/header.js"></script>
 </div>
 {{end}}
