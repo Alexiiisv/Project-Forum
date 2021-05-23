@@ -45,16 +45,16 @@ body, * {
 }
 .message {
     position: absolute;
-    top: 510px;
-    left: 306px;
-    width: 375px;
+    top: 523px;
+    left: 375px;
+    width: 250px;
     border: black 3px solid;
     border-radius: 20px;
     padding: 5px 5px 5px 5px;
     display: flex;
     justify-content: right;
     flex-wrap: wrap;
-    align-content: flex-end;
+    align-content: center;
     flex-direction: column;
 }
 .buttoninput {

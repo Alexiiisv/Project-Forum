@@ -22,15 +22,12 @@
             <a href="/register" class="button">Click there to Create an account</a>
         </div>
         <div class="place">
-            {{$size := len .Account.Data.Name}}
-            {{if gt $size 0}}
                 <div class="message">
-                    <h3>{{.Account.Data.Name}}</h3>
-                    <p>{{.Account.Data.Password}}</p>
-                    <p>{{.Account.Data.Email}}</p>
-                    <p>{{.Account.Data.Uuid}}</p>
+                    <p>Connect to your account with</p>
+                    <br>
+                    <p>Account Name</p>
+                    <p>Account Password</p>
                 </div>
-            {{end}}
             <div class="form">
                 <form action="/connect" method="POST">
                     <input type="text" placeholder="Name" name="Name" required>
