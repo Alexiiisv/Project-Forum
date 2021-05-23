@@ -7,47 +7,12 @@ import (
 	"net/http"
 	"text/template"
 
-	uuid "github.com/gofrs/uuid"
-
-	hash "golang.org/x/crypto/bcrypt"
-
-	_ "github.com/mattn/go-sqlite3"
-
 	config "github.com/Alexiiisv/Project-Forum/v2/config"
 )
 
-//basic struct
-type DataSend struct {
-	Name     string
-	Password string
-	Email    string
-	Uuid     uuid.UUID
-}
-
-type AllAccount struct {
-	Connected bool
-	Data []DataSend
-}
-
-type LoginYes struct {
-	Connected bool
-	Account Account
-}
-
-type Account struct {
-	Data DataSend
-}
-
-//const for hashing
-const (
-	MinCost     int = 4  // the minimum allowable cost as passed in to GenerateFromPassword
-	MaxCost     int = 31 // the maximum allowable cost as passed in to GenerateFromPassword
-	DefaultCost int = 10 // the cost that will actually be set if a cost below MinCost is passed into GenerateFromPassword
-)
-
-var Data DataSend
-var Dataarray AllAccount
-var Logged LoginYes
+var Data config.DataSend
+var Dataarray config.AllAccount
+var Logged config.LoginYes
 var Name, Password string
 
 func main() {
@@ -67,7 +32,7 @@ func main() {
 	}
 }
 
-//page index (main page)
+//page index
 func index(w http.ResponseWriter, r *http.Request) {
 	Dataarray.Connected = Logged.Connected
 	t := template.New("index-template")
@@ -75,29 +40,27 @@ func index(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "index", Dataarray)
 }
 
-//create account with value from page
+//create account
 func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	NameChoosen := r.FormValue("Name")
 	Password := r.FormValue("Password")
 	Email := r.FormValue("Email")
-	Dataarray.Data = append(Dataarray.Data, DataSend{NameChoosen, Password, Email, GetUUID()})
+	Dataarray.Data = append(Dataarray.Data, config.DataSend{Name: NameChoosen, Password: Password, Email: Email, Uuid: config.GetUUID()})
 	saveUuid("accounts")
 	ShowAccount(w, r)
 }
 
-//page to show all accounts existing
+//page accounts
 func ShowAccount(w http.ResponseWriter, r *http.Request) {
-	Dataarray.Data = readUuid("ShowAccount")
+	Dataarray.Data = readuuid("ShowAccount")
 	Dataarray.Connected = Logged.Connected
-	fmt.Println(Dataarray)
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "accounts", Dataarray)
 }
 
-//page to show all accounts existing
+//page account information
 func Info(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(Logged)
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Logged)
@@ -110,8 +73,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "login", Logged)
 }
 
-//page login
+//page register
 func Register(w http.ResponseWriter, r *http.Request) {
+	Dataarray.Connected = Logged.Connected
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "register", Dataarray)
@@ -120,42 +84,57 @@ func Register(w http.ResponseWriter, r *http.Request) {
 func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	Name = r.FormValue("Name")
 	Password = r.FormValue("Password")
-	Dataarray.Data = readUuid("LoggedOn")
-	Logged.Account.Data = Dataarray.Data[0]
-	Logged.Connected = true
-	fmt.Println(Logged)
-
-	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "login", Logged)
+	Dataarray.Data = readuuid("LoggedOn")
+	if len(Dataarray.Data) == 1 {
+		Logged.Account.Data = Dataarray.Data[0]
+		Logged.Connected = true
+		index(w, r)
+	}else {
+		Login(w, r)
+	}
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
-	Logged.Account = Account{}
+	Logged.Account = config.Account{}
 	Logged.Connected = false
-	fmt.Println(Logged)
-
-	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "login", Logged)
+	Login(w, r)
 }
 
-//give a unique uuid to a user
-func GetUUID() uuid.UUID {
-	// Creating UUID Version 4
-	// panic on error
-	//var u1 uuid.UUID
-	// if Dataa[len(Dataa)].Uuid == uuid.Nil {
-	var u1 uuid.UUID = uuid.Must(uuid.NewV4())
-	// } else {
-	// 	u1 = Dataa[len(Dataa)].Uuid
-	// }
+/*
+// //get the length of a table
+func GetCount(schemadottablename string, db *sql.DB) int {
+	var cnt int
+	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
+	return cnt
+}
+*/
 
-	u2, err := uuid.FromString(u1.String())
+//read database/store value from database to go code
+func readuuid(state string) []config.DataSend {
+	db, err := sql.Open("sqlite3", "./Database/User.db")
 	if err != nil {
-		fmt.Printf("Something went wrong: %s", err)
+		log.Fatal(err)
 	}
-	return u2
+	sql_readall := `SELECT Name, Password, Email, Uuid FROM Accounts`
+
+	rows, err := db.Query(sql_readall)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	var result []config.DataSend
+	for rows.Next() {
+		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid)
+		if state == "LoggedOn" && config.CheckPasswordHash(Password, Data.Password) && Data.Name == Name {
+			Data.Password = Password
+			result = append(result, Data)
+			break
+		} else if state == "ShowAccount" {
+			result = append(result, Data)
+		}
+	}
+	return result
 }
 
 //write in a database
@@ -171,78 +150,11 @@ func saveUuid(state string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println((Dataarray))
 		for index := range Dataarray.Data {
-			if UserExists(db, Dataarray.Data[index].Uuid.String()) {
+			if config.UserExists(db, Dataarray.Data[index].Uuid.String()) {
 				continue
 			}
-			result, _ := stmt.Exec(Dataarray.Data[index].Name, string(HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String())
-			fmt.Println("resultat ", result)
+			stmt.Exec(Dataarray.Data[index].Name, string(config.HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String())
 		}
 	}
-}
-
-//read database/store value from database to go code
-func readUuid(state string) []DataSend {
-	db, err := sql.Open("sqlite3", "./Database/User.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	sql_readall := `SELECT Name, Password, Email, Uuid FROM Accounts`
-
-	rows, err := db.Query(sql_readall)
-	if err != nil {
-		panic(err)
-	}
-	defer rows.Close()
-
-	var result []DataSend
-	for rows.Next() {
-		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid)
-		if state == "LoggedOn" && CheckPasswordHash(Password, Data.Password) {
-			Data.Password = Password
-			result = append(result, Data)
-			break
-		} else if state == "ShowAccount" {
-			result = append(result, Data)
-		}
-	}
-	return result
-}
-
-/*
-// //get the length of a table
-func GetCount(schemadottablename string, db *sql.DB) int {
-	var cnt int
-	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
-	return cnt 
-}
-*/
-
-//check if an account exist
-func UserExists(db *sql.DB, uuid string) bool {
-	sqlStmt := `SELECT Uuid FROM Accounts WHERE Uuid = ?`
-	err := db.QueryRow(sqlStmt, uuid).Scan(&uuid)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			// a real error happened! you should change your function return
-			// to "(bool, error)" and return "false, err" here
-			log.Print(err)
-		}
-		fmt.Println("faux ", uuid)
-		return false
-	}
-	fmt.Println("vrai ", uuid)
-	return true
-}
-
-//crypt password
-func HashPassword(passwd string) []byte {
-	has, _ := hash.GenerateFromPassword([]byte(passwd), DefaultCost)
-	return has
-}
-
-func CheckPasswordHash(password string, hashpass string) bool {
-	var err error = hash.CompareHashAndPassword([]byte(hashpass), []byte(password))
-	return err == nil
 }

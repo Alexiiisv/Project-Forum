@@ -27,6 +27,9 @@
                     <br>
                     <p>Account Name</p>
                     <p>Account Password</p>
+                    {{if not .Connected}}
+                    <br><h4 style="color: red;">Tu n'est pas connecté</h4>
+                    {{end}}
                 </div>
             <div class="form">
                 <form action="/connect" method="POST">
@@ -49,7 +52,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./assets/css/login.css">
+    <link rel="stylesheet" href="./assets/css/register.css">
     <script src="../assets/js/password_verification.js"></script>
     <title>Project Forum</title>
 </head>
@@ -75,7 +78,7 @@
                 <P id="char" class="invalid">A <b>special character (&£$!?%...)</b></P>
             </div>
             <div class="form">
-            <form action="/createAcc" method="POST">
+            <form action="/createAcc" method="POST" class="formCreate">
                 <div class="input">
                     <input type="text" placeholder="Name" name="Name"
                 pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" required>
