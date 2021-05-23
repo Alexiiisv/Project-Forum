@@ -9,7 +9,6 @@ body, * {
 .page-index {
     width: 100vw;
     height: 2150px;
-    /* background-color: black; */
     display: block;
     justify-content: center;
     align-items: center;

@@ -11,17 +11,17 @@
     <title>Project Forum</title>
 </head>
 <body>
-    {{template "header"}}
+    {{template "header" .}}
     <div class="page-index">
         <div class="title">
             <h1>Accounts</h1>
             <h2>Show all accounts existing on the site</h2>
         </div>
-            {{ $length := len .}}
+            {{ $length := len .Data}}
             {{if ge $length 1}}
             <div class="allAccount">
                 <div class="account">
-                    {{range .}}
+                    {{range .Data}}
                     <div class="Account">
                     <p>{{.Name}}</p>
                     <p>{{.Uuid}}</p>
@@ -49,7 +49,7 @@
     <title>Project Forum</title>
 </head>
 <body>
-    {{template "header"}}
+    {{template "header" .}}
     <div class="page-index">
         <div class="title">
             <h1>Account</h1>

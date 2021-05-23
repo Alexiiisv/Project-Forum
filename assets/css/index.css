@@ -19,11 +19,14 @@ body, * {
     height: 100px;
 }
 .form {
+    position: absolute;
     width: 670px;
+    right: 250px;
     height: 200px;
     display: flex;
     align-items: center;
     align-content: space-between;
+    margin: 250px 20px 20px 20px;
     border: solid 3px black;
     border-radius: 10px;
     justify-content: center;
@@ -41,6 +44,9 @@ body, * {
     align-items: center;
 }
 .message {
+    position: absolute;
+    top: 523px;
+    left: 375px;
     width: 250px;
     border: black 3px solid;
     border-radius: 20px;
@@ -58,14 +64,4 @@ body, * {
     position: absolute;
     left: 273px;
     top: 132px;
-}
-.place {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 150px;
-    height: 300px;
-    align-content: flex-end;
-    padding-top: 230px;
-    padding-left: 401px;
 }

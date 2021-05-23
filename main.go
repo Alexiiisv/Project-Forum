@@ -24,6 +24,11 @@ type DataSend struct {
 	Uuid     uuid.UUID
 }
 
+type AllAccount struct {
+	Connected bool
+	Data []DataSend
+}
+
 type LoginYes struct {
 	Connected bool
 	Account Account
@@ -41,7 +46,7 @@ const (
 )
 
 var Data DataSend
-var Dataarray []DataSend
+var Dataarray AllAccount
 var Logged LoginYes
 var Name, Password string
 
@@ -64,6 +69,7 @@ func main() {
 
 //page index (main page)
 func index(w http.ResponseWriter, r *http.Request) {
+	Dataarray.Connected = Logged.Connected
 	t := template.New("index-template")
 	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "index", Dataarray)
@@ -74,14 +80,16 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	NameChoosen := r.FormValue("Name")
 	Password := r.FormValue("Password")
 	Email := r.FormValue("Email")
-	Dataarray = append(Dataarray, DataSend{NameChoosen, Password, Email, GetUUID()})
+	Dataarray.Data = append(Dataarray.Data, DataSend{NameChoosen, Password, Email, GetUUID()})
 	saveUuid("accounts")
 	ShowAccount(w, r)
 }
 
 //page to show all accounts existing
 func ShowAccount(w http.ResponseWriter, r *http.Request) {
-	Dataarray = readUuid("ShowAccount")
+	Dataarray.Data = readUuid("ShowAccount")
+	Dataarray.Connected = Logged.Connected
+	fmt.Println(Dataarray)
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "accounts", Dataarray)
@@ -89,6 +97,7 @@ func ShowAccount(w http.ResponseWriter, r *http.Request) {
 
 //page to show all accounts existing
 func Info(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(Logged)
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Logged)
@@ -111,8 +120,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	Name = r.FormValue("Name")
 	Password = r.FormValue("Password")
-	Dataarray = readUuid("LoggedOn")
-	Logged.Account.Data = Dataarray[0]
+	Dataarray.Data = readUuid("LoggedOn")
+	Logged.Account.Data = Dataarray.Data[0]
 	Logged.Connected = true
 	fmt.Println(Logged)
 
@@ -163,11 +172,11 @@ func saveUuid(state string) {
 			log.Fatal(err)
 		}
 		fmt.Println((Dataarray))
-		for index := range Dataarray {
-			if UserExists(db, Dataarray[index].Uuid.String()) {
+		for index := range Dataarray.Data {
+			if UserExists(db, Dataarray.Data[index].Uuid.String()) {
 				continue
 			}
-			result, _ := stmt.Exec(Dataarray[index].Name, string(HashPassword(Dataarray[len(Dataarray)-1].Password)), Dataarray[index].Email, Dataarray[index].Uuid.String())
+			result, _ := stmt.Exec(Dataarray.Data[index].Name, string(HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String())
 			fmt.Println("resultat ", result)
 		}
 	}
