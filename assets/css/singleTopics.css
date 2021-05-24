@@ -1,0 +1,49 @@
+body, * {
+    margin: 0;
+    padding: 0;
+    font-family: cursive;
+    color: black;
+    text-decoration: none;
+    overflow-x: hidden;
+}
+.page-index {
+    width: 100vw;
+    height: 2150px;
+    /* background-color: black; */
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+.title {
+    text-align: center;
+    transform: translate(0px, 130px);
+    height: 100px;
+}
+.allTopics {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+.Topics {
+    margin: 20px 20px 20px 20px;
+    border-radius: 10px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    column-gap: 50px;
+}
+.topics {
+    margin: 150px 0px 120px 0px;
+    width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border: black 3px solid;
+    border-radius: 15px;
+}

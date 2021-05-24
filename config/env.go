@@ -22,7 +22,7 @@ const (
 const LocalhostPort = ":8080"
 
 //basic struct
-type DataSend struct {
+type Account struct {
 	Name     string
 	Password string
 	Email    string
@@ -31,7 +31,7 @@ type DataSend struct {
 
 type AllAccount struct {
 	Connected bool
-	Data      []DataSend
+	Data      []Account
 }
 
 type LoginYes struct {
@@ -39,8 +39,27 @@ type LoginYes struct {
 	Account   Account
 }
 
-type Account struct {
-	Data DataSend
+type TName struct {
+	Id    int
+	Title string
+	Desc  string
+}
+
+type TContent struct {
+	Id   int
+	Uuid string
+	Text string
+}
+//single topics
+type Topics struct {
+	Name    TName
+	Content []TContent
+	Account LoginYes
+}
+//all topics
+type AllTopics struct {
+	Name    []TName
+	Connected bool
 }
 
 //give a unique uuid to a user
@@ -88,5 +107,3 @@ func CheckPasswordHash(password string, hashpass string) bool {
 	var err error = hash.CompareHashAndPassword([]byte(hashpass), []byte(password))
 	return err == nil
 }
-
-

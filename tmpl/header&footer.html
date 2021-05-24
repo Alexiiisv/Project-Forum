@@ -4,40 +4,40 @@
 {{define "header"}}
 <link rel="stylesheet" href="../assets/css/header.css" />
 <div class="header">
-  <div class="project-forum">
-    
-    <div class="test">
-      <a class="testt" href="/">
-        <div href="/" class="testtt">Accueil</div>
-      </a>
+    <div class="project-forum">
+
+        <div class="Index">
+            <a class="Index-body" href="/">
+                <div href="/" class="Index-text">Accueil</div>
+            </a>
+        </div>
+        <div class="pages-container">
+            <div class="pages">
+                <div class="location">
+                    <a id="location" href="accounts">All Accounts</a>
+                </div>
+                <div class="groups">
+                    <a id="artists" href="topics">Topics</a>
+                </div>
+                <div class="dates">
+                    <a id="dates" href="dates" style="opacity: 0;">Dates</a>
+                </div>
+                {{if .Connected}}
+                <div class="info">
+                    <a id="Info" href="information">Info</a>
+                </div>
+                {{else}}
+                <div class="login">
+                    <a id="login" href="login">Login</a>
+                </div>
+                {{end}}
+            </div>
+        </div>
     </div>
-    <div class="pages-container">
-      <div class="pages">
-        <div class="location">
-          <a id="location" href="accounts">All Accounts</a>
-        </div>
-        <div class="groups">
-          <a id="artists" href="artists" style="opacity: 0;">Artists</a>
-        </div>
-        <div class="dates">
-          <a id="dates" href="dates" style="opacity: 0;">Dates</a>
-        </div>
-        {{if .Connected}}
-        <div class="info">
-          <a id="Info" href="information">Info</a>
-        </div>
-        {{else}}
-        <div class="login">
-          <a id="login" href="login">Login</a>
-        </div>
-        {{end}}
-      </div>
+    <div class="hide">
+        <a id="logout" href="logout">logout</a>
     </div>
-  </div>
-  <div class="hide">
-          <a id="logout" href="logout">logout</a>
-        </div>
-<script type="text/javascript" src="../assets/js/header.js"></script>
+    <script type="text/javascript" src="../assets/js/header.js"></script>
 </div>
 {{end}}
 
@@ -47,40 +47,40 @@
 {{define "footer"}}
 <link rel="stylesheet" href="../assets/css/footer.css" />
 <div class="footer">
-  <div class="footer-container">
-    <div class="first-column">
-      <div class="logo-footer">
-        <img src="../assets/image/logo-GT.png" alt="logo" />
-      </div>
-      <a target="_blank" href="https://git.ytrack.learn.ynov.com/SDOCKX/groupie-tracker">GitHub</a>
-      <p></p>
-      <a target="_blank" href="https://ytrack.learn.ynov.com/intra/pyc/div-01/groupie-tracker">Ytrack</a>
-      <p></p>
-      <a target="_blank" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">More Info</a>
+    <div class="footer-container">
+        <div class="first-column">
+            <div class="logo-footer">
+                <img src="../assets/image/logo-GT.png" alt="logo" />
+            </div>
+            <a target="_blank" href="https://git.ytrack.learn.ynov.com/SDOCKX/groupie-tracker">GitHub</a>
+            <p></p>
+            <a target="_blank" href="https://ytrack.learn.ynov.com/intra/pyc/div-01/groupie-tracker">Ytrack</a>
+            <p></p>
+            <a target="_blank" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">More Info</a>
+        </div>
+        <div class="second-column">
+            <div class="s-column">
+                <h3>Development team</h3>
+                <p>Elodie Senel</p>
+                <p>Duane Estrade</p>
+                <p>Sven Dockx</p>
+                <p>Alexis Velleine</p>
+            </div>
+        </div>
+        <div class="third-column">
+            <div class="s-column">
+                <h3>Network</h3>
+                <a target="_blank" href="https://www.linkedin.com/in/elodie-senel-72a0131b7/">Elodie Senel</a>
+                <p></p>
+                <a target="_blank" href="https://www.linkedin.com/in/duane-estrade-2a4239212/">Duane Estrade</a>
+                <p></p>
+                <a target="_blank" href="https://www.linkedin.com/in/sven-dockx-38598516a/">Sven Dockx</a>
+                <p></p>
+                <a target="_blank" href="https://www.linkedin.com/in/alexis-velleine-2421901a3/">Alexis Velleine</a>
+                <p></p>
+            </div>
+        </div>
     </div>
-    <div class="second-column">
-      <div class="s-column">
-        <h3>Development team</h3>
-        <p>Elodie Senel</p>
-        <p>Duane Estrade</p>
-        <p>Sven Dockx</p>
-        <p>Alexis Velleine</p>
-      </div>
-    </div>
-    <div class="third-column">
-      <div class="s-column">
-        <h3>Network</h3>
-        <a target="_blank" href="https://www.linkedin.com/in/elodie-senel-72a0131b7/">Elodie Senel</a>
-        <p></p>
-        <a target="_blank" href="https://www.linkedin.com/in/duane-estrade-2a4239212/">Duane Estrade</a>
-        <p></p>
-        <a target="_blank" href="https://www.linkedin.com/in/sven-dockx-38598516a/">Sven Dockx</a>
-        <p></p>
-        <a target="_blank" href="https://www.linkedin.com/in/alexis-velleine-2421901a3/">Alexis Velleine</a>
-        <p></p>
-      </div>
-    </div>
-  </div>
 </div>
 {{end}}
 
@@ -92,21 +92,21 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" href="../assets/image/logo-GT.png" />
-  <title>Groupie Tracker</title>
-  <link rel="stylesheet" href="../assets/css/singleArtist.css" />
-  <link rel="stylesheet" href="../assets/css/not-found.css" />
-  <style></style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="../assets/image/logo-GT.png" />
+    <title>Groupie Tracker</title>
+    <link rel="stylesheet" href="../assets/css/singleArtist.css" />
+    <link rel="stylesheet" href="../assets/css/not-found.css" />
+    <style></style>
 </head>
 
 <body>
-  <h1>&lt;h1&gt;Error 404&lt;/h1&gt;</h1>
-  <h2>&lt;h2&gt;Not Found&lt;/h2&gt;</h2>
-  <p>&lt;p&gt;What you're looking for does not exist&lt;/p&gt;</p>
-  <p>&lt;a href="index.html"&gt;<a href="index.html">Return to Home</a>&lt;/a&gt;</p>
+    <h1>&lt;h1&gt;Error 404&lt;/h1&gt;</h1>
+    <h2>&lt;h2&gt;Not Found&lt;/h2&gt;</h2>
+    <p>&lt;p&gt;What you're looking for does not exist&lt;/p&gt;</p>
+    <p>&lt;a href="index.html"&gt;<a href="index.html">Return to Home</a>&lt;/a&gt;</p>
 </body>
 
 </html>

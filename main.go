@@ -5,15 +5,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"text/template"
 
 	config "github.com/Alexiiisv/Project-Forum/v2/config"
 )
 
-var Data config.DataSend
+var Data config.Account
+var TName config.TName
+var TContent config.TContent
+var TopicsName config.Topics
 var Dataarray config.AllAccount
+var allTopics config.AllTopics
 var Logged config.LoginYes
 var Name, Password string
+var IdTopics int
 
 func main() {
 	fmt.Println("Please connect to\u001b[31m localhost", config.LocalhostPort, "\u001b[0m")
@@ -26,6 +32,8 @@ func main() {
 	http.HandleFunc("/register", Register)
 	http.HandleFunc("/createAcc", CreateAccount)
 	http.HandleFunc("/connect", LoggedOn)
+	http.HandleFunc("/topics", AllTopics)
+	http.HandleFunc("/singleTopics", singleTopics)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -45,7 +53,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	NameChoosen := r.FormValue("Name")
 	Password := r.FormValue("Password")
 	Email := r.FormValue("Email")
-	Dataarray.Data = append(Dataarray.Data, config.DataSend{Name: NameChoosen, Password: Password, Email: Email, Uuid: config.GetUUID()})
+	Dataarray.Data = append(Dataarray.Data, config.Account{Name: NameChoosen, Password: Password, Email: Email, Uuid: config.GetUUID()})
 	saveUuid("accounts")
 	ShowAccount(w, r)
 }
@@ -57,6 +65,28 @@ func ShowAccount(w http.ResponseWriter, r *http.Request) {
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "accounts", Dataarray)
+}
+
+//page accounts
+func AllTopics(w http.ResponseWriter, r *http.Request) {
+	allTopics.Name = readtopics()
+	allTopics.Connected = Logged.Connected
+	fmt.Println(allTopics)
+	t := template.New("topics-template")
+	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "topics", allTopics)
+}
+
+//page accounts
+func singleTopics(w http.ResponseWriter, r *http.Request) {
+	IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics")) 
+	TopicsName.Name = GetTopicsData()
+	TopicsName.Account = Logged
+	TopicsName.Content = GetTopicsContent()
+	fmt.Println(TopicsName)
+	t := template.New("singleTopics-template")
+	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "singleTopics", TopicsName)
 }
 
 //page account information
@@ -86,10 +116,10 @@ func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	Password = r.FormValue("Password")
 	Dataarray.Data = readuuid("LoggedOn")
 	if len(Dataarray.Data) == 1 {
-		Logged.Account.Data = Dataarray.Data[0]
+		Logged.Account = Dataarray.Data[0]
 		Logged.Connected = true
 		index(w, r)
-	}else {
+	} else {
 		Login(w, r)
 	}
 }
@@ -110,7 +140,7 @@ func GetCount(schemadottablename string, db *sql.DB) int {
 */
 
 //read database/store value from database to go code
-func readuuid(state string) []config.DataSend {
+func readuuid(state string) []config.Account {
 	db, err := sql.Open("sqlite3", "./Database/User.db")
 	if err != nil {
 		log.Fatal(err)
@@ -123,7 +153,7 @@ func readuuid(state string) []config.DataSend {
 	}
 	defer rows.Close()
 
-	var result []config.DataSend
+	var result []config.Account
 	for rows.Next() {
 		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid)
 		if state == "LoggedOn" && config.CheckPasswordHash(Password, Data.Password) && Data.Name == Name {
@@ -132,6 +162,79 @@ func readuuid(state string) []config.DataSend {
 			break
 		} else if state == "ShowAccount" {
 			result = append(result, Data)
+		}
+	}
+	return result
+}
+
+//read database/store value from database to go code
+func readtopics() []config.TName {
+	db, err := sql.Open("sqlite3", "./Database/Topics.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	sql_readall := `SELECT Id, Title, Description FROM Topics_Name`
+
+	rows, err := db.Query(sql_readall)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	var result []config.TName
+	for rows.Next() {
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc)
+		result = append(result, TName)
+	}
+	return result
+}
+
+//read database/store value from database to go code
+func GetTopicsData() config.TName {
+	db, err := sql.Open("sqlite3", "./Database/Topics.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	sql_readall := `SELECT Id, Title, Description FROM Topics_Name`
+
+	rows, err := db.Query(sql_readall)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	var result config.TName
+	for rows.Next() {
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc)
+		if TName.Id == IdTopics {
+			result = TName
+			break
+		}
+	}
+	return result
+}
+
+//read database/store value from database to go code
+func GetTopicsContent() []config.TContent {
+	db, err := sql.Open("sqlite3", "./Database/Topics.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	sql_readall := `SELECT Id, Uuid, Text FROM Topics`
+
+	rows, err := db.Query(sql_readall)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	var result []config.TContent
+	for rows.Next() {
+		rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text)
+		if TContent.Id == IdTopics {
+			result = append(result, TContent)
+		} else {
+			continue
 		}
 	}
 	return result

@@ -22,15 +22,16 @@
             <a href="/register" class="button">Click there to Create an account</a>
         </div>
         <div class="place">
-                <div class="message">
-                    <p>Connect to your account with</p>
-                    <br>
-                    <p>Account Name</p>
-                    <p>Account Password</p>
-                    {{if not .Connected}}
-                    <br><h4 style="color: red;">Tu n'est pas connecté</h4>
-                    {{end}}
-                </div>
+            <div class="message">
+                <p>Connect to your account with</p>
+                <br>
+                <p>Account Name</p>
+                <p>Account Password</p>
+                {{if not .Connected}}
+                <br>
+                <h4 style="color: red;">Tu n'est pas connecté</h4>
+                {{end}}
+            </div>
             <div class="form">
                 <form action="/connect" method="POST">
                     <input type="text" placeholder="Name" name="Name" required>
@@ -39,8 +40,8 @@
                 </form>
             </div>
         </div>
-    </div
-</body>
+    </div </body>
+
 </html>
 {{end}}
 
@@ -78,23 +79,24 @@
                 <P id="char" class="invalid">A <b>special character (&£$!?%...)</b></P>
             </div>
             <div class="form">
-            <form action="/createAcc" method="POST" class="formCreate">
-                <div class="input">
-                    <input type="text" placeholder="Name" name="Name"
-                pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" required>
-                <input type="password" placeholder="Password" name="Password" id="pass1" 
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required>
-                <input type="email" placeholder="example@gmail.com" name="Email"
-                pattern= "/^(|(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6})$/i" required>
-                </div>
-                <div class="inputbtn">
-                    <input type="submit" value="Create Account" class="buttoninput">
-                </div>
-            </form>
+                <form action="/createAcc" method="POST" class="formCreate">
+                    <div class="input">
+                        <input type="text" placeholder="Name" name="Name"
+                            pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" required>
+                        <input type="password" placeholder="Password" name="Password" id="pass1"
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required>
+                        <input type="email" placeholder="example@gmail.com" name="Email"
+                            pattern="/^(|(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6})$/i"
+                            required>
+                    </div>
+                    <div class="inputbtn">
+                        <input type="submit" value="Create Account" class="buttoninput">
+                    </div>
+                </form>
+            </div>
         </div>
-        </div>
-        
-    </div 
-</body>
+
+    </div </body>
+
 </html>
 {{end}}

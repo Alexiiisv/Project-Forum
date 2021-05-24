@@ -1,0 +1,86 @@
+<!--
+    Template for all topics
+-->
+{{define "topics"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/topics.css">
+    <title>Project Forum</title>
+</head>
+
+<body>
+    {{template "header" .}}
+    <div class="page-index">
+        <div class="title">
+            <h1>topics</h1>
+            <h2>Show all topics existing on the site</h2>
+        </div>
+        {{ $length := len .Name}}
+        {{if ge $length 1}}
+        <div class="allTopics">
+            <div class="topics">
+                {{range .Name}}
+                <form method="GET" action="/singleTopics">
+                    <input type="hidden" value="{{.Id}}" name="IdTopics">
+                    <button>
+                        <div class="Topics">
+                            <p>{{.Id}}</p>
+                            <p>{{.Title}}</p>
+                            <p>{{.Desc}}</p>
+                        </div>
+                    </button>
+                </form>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+    </div </body>
+
+</html>
+{{end}}
+
+<!--
+    Template for all topics
+-->
+{{define "singleTopics"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/singleTopics.css">
+    <title>Project Forum</title>
+</head>
+
+<body>
+    {{template "header" .Account}}
+    <div class="page-index">
+        <div class="title">
+            <h1>{{.Name.Title}}</h1>
+            <h2>{{.Name.Desc}}</h2>
+        </div>
+        {{ $length := len .Content}}
+        {{if ge $length 1}}
+        <div class="allTopics">
+            <div class="topics">
+                {{range .Content}}
+                    <div class="Topics">
+                        <p>{{.Id}}</p>
+                        <p>{{.Uuid}}</p>
+                        <p>{{.Text}}</p>
+                    </div>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+    </div </body>
+
+</html>
+{{end}}
