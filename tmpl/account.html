@@ -1,15 +1,18 @@
 <!--
     Template for all accounts
 -->
-{{define "accounts"}}<!DOCTYPE html>
+{{define "accounts"}}
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./assets/css/accounts.css">
+    <link rel="stylesheet" href="../assets/css/accounts.css">
     <title>Project Forum</title>
 </head>
+
 <body>
     {{template "header" .}}
     <div class="page-index">
@@ -17,36 +20,40 @@
             <h1>Accounts</h1>
             <h2>Show all accounts existing on the site</h2>
         </div>
-            {{ $length := len .Data}}
-            {{if ge $length 1}}
-            <div class="allAccount">
-                <div class="account">
-                    {{range .Data}}
-                    <div class="Account">
+        {{ $length := len .Data}}
+        {{if ge $length 1}}
+        <div class="allAccount">
+            <div class="account">
+                {{range .Data}}
+                <div class="Account">
                     <p>{{.Name}}</p>
                     <p>{{.Uuid}}</p>
-                    </div>
-                    {{end}}
                 </div>
+                {{end}}
             </div>
-            {{end}}
-    </div
-</body>
+        </div>
+        {{end}}
+    </div </body>
+
 </html>
 {{end}}
 
 <!--
     Template for a single account
 -->
-{{define "account"}}<!DOCTYPE html>
+{{define "account"}}
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
+    <!-- <script src="../assets/js/profile_picture.js"></script> -->
     <title>Project Forum</title>
 </head>
+
 <body>
     {{template "header" .}}
     <div class="page-index">
@@ -54,20 +61,24 @@
             <h1>Account</h1>
             <h2>Informations about your account</h2>
         </div>
-            <div class="Info">
-                <div class="account">
-                    <div class="essential">
-                        <h3>{{.Account.Name}}</h3>
-                        <img src="../assets/image/Icon/account-test.png">
-                    </div>
-                    <div class="less-essential">
-                        <p>{{.Account.Password}}</p>
-                        <p>{{.Account.Email}}</p>
-                        <p>{{.Account.Uuid}}</p>
-                    </div>
+        <div class="Info">
+            <div class="account">
+                <div class="essential">
+                    <h3>{{.Account.Name}}</h3>
+                    <!-- <img src="../assets/image/Icon/account-test.png"> -->
+                    <img class="pp" alt="" />
+
+                    <input type="file"
+                        onchange="document.getElementsByClassName('pp')[0].src=window.URL.createObjectURL(this.files[0])">
+                </div>
+                <div class="less-essential">
+                    <p>{{.Account.Password}}</p>
+                    <p>{{.Account.Email}}</p>
+                    <p>{{.Account.Uuid}}</p>
                 </div>
             </div>
-    </div
-</body>
+        </div>
+    </div </body>
+
 </html>
 {{end}}
