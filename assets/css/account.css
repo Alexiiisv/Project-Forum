@@ -59,3 +59,7 @@ body, * {
     border-radius: 50%;
     clip-path: ellipse(50% 50%);
 }
+.pp {
+    width: 40%;
+    height: 40%;
+}
