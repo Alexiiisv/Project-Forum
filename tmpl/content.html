@@ -1,0 +1,17 @@
+{{define "SingleTopic"}}
+{{ $length := len .Content}}
+        {{if ge $length 1}}
+        <div class="allTopics">
+            <div class="topics">
+                {{range .Content}}
+                    <div class="Topics">
+                        <p class="AccName">{{.Uuid}}</p>
+                        <p class="border"></p>
+                        <p class="AccText">{{.Text}}</p>
+                    </div>
+                {{end}}
+            </div>
+        </div>
+{{end}}
+<script type="text/javascript" src="../assets/js/singleTopic.js"></script>
+{{end}}

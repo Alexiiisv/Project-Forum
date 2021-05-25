@@ -10,6 +10,7 @@ body, * {
     width: 100vw;
     height: 800px;
     display: block;
+    background-color: #eee;
     justify-content: center;
     align-items: center;
 }

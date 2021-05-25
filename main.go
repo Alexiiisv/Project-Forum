@@ -18,7 +18,7 @@ var TopicsName config.Topics
 var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var Logged config.LoginYes
-var Name, Password string
+var Name, Password, TopicText string
 var IdTopics int
 
 func main() {
@@ -79,13 +79,20 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 
 //page accounts
 func singleTopics(w http.ResponseWriter, r *http.Request) {
-	IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics")) 
+	state := r.FormValue("State")
+	if state == "SingleTopic" {
+		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics")) 
+	}else if state == "PostTopic" {
+		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
+		TopicText = r.FormValue("text")
+		SetTopicText("PostTopicText")
+	}
 	TopicsName.Name = GetTopicsData()
 	TopicsName.Account = Logged
 	TopicsName.Content = GetTopicsContent()
-	fmt.Println(TopicsName)
+	TopicsName.Accounts = readuuid("ShowAccount")
 	t := template.New("singleTopics-template")
-	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html"))
+	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "singleTopics", TopicsName)
 }
 
@@ -229,8 +236,14 @@ func GetTopicsContent() []config.TContent {
 	defer rows.Close()
 
 	var result []config.TContent
+	Compte := readuuid("ShowAccount")
 	for rows.Next() {
 		rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text)
+		for i := 0; i < len(Compte); i++ {
+			if TContent.Uuid == Compte[i].Uuid.String() {
+				TContent.Uuid = Compte[i].Name
+			}
+		}
 		if TContent.Id == IdTopics {
 			result = append(result, TContent)
 		} else {
@@ -259,5 +272,22 @@ func saveUuid(state string) {
 			}
 			stmt.Exec(Dataarray.Data[index].Name, string(config.HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String())
 		}
+	}
+}
+
+//write in a database
+func SetTopicText(state string) {
+	db, err := sql.Open("sqlite3", "./Database/Topics.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	if state == "PostTopicText" {
+		stmt, err := db.Prepare("insert into Topics(Id, Uuid, Text) values(?, ?, ?)")
+		if err != nil {
+			log.Fatal(err)
+		}
+			stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText)
 	}
 }

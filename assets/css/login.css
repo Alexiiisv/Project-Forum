@@ -8,8 +8,9 @@ body, * {
 }
 .page-index {
     width: 100vw;
-    height: 800px;
+    height: 100vh;
     display: block;
+    background-color: #eee;
     justify-content: center;
     align-items: center;
 }
