@@ -221,16 +221,6 @@ func GetTopicsData() config.TName {
 	return result
 }
 
-<<<<<<< HEAD
-/*
-// //get the length of a table
-func GetCount(schemadottablename string, db *sql.DB) int {
-	var cnt int
-	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
-	return cnt
-}
-*/
-=======
 //read database/store value from database to go code
 func GetTopicsContent() []config.TContent {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
@@ -238,7 +228,6 @@ func GetTopicsContent() []config.TContent {
 		log.Fatal(err)
 	}
 	sql_readall := `SELECT Id, Uuid, Text FROM Topics`
->>>>>>> e5920840c3f0de1bfc375f31ffa86853779f57ba
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
