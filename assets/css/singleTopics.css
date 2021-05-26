@@ -5,11 +5,11 @@ body, * {
     color: black;
     text-decoration: none;
     overflow-x: hidden;
+    z-index: 1;
 }
 .page-index {
     width: 100vw;
     height: auto;
-    background-color: #eee;
     display: block;
     justify-content: center;
     align-items: center;

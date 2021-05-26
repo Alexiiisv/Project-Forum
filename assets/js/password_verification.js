@@ -3,7 +3,7 @@ var letter = document.getElementById("letter");
 var capital = document.getElementById("capital");
 var number = document.getElementById("number");
 var length = document.getElementById("length");
-var char = document.getElementById("char");
+var chars = document.getElementById("char");
 
 // When the user clicks on the password field, show the message box
 // myInput.onfocus = function() {
@@ -58,12 +58,10 @@ var char = document.getElementById("char");
  // Valide Char
  var char =/[@$!%*?&]/g;
  if(myInput.value.match(char)) {
-   capital.classList.remove("invalid");
-   capital.classList.add("valid");
-   console.log("charchar");
+   chars.classList.remove("invalid");
+   chars.classList.add("valid");
  } else {
-   capital.classList.remove("valid");
-   capital.classList.add("invalid");
-   console.log("no char");
+  chars.classList.remove("valid");
+  chars.classList.add("invalid");
  }
 }
