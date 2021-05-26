@@ -63,3 +63,7 @@ body, * {
     width: 40%;
     height: 40%;
 }
+
+.container {
+    margin-left: 15%;
+}

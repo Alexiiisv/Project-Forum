@@ -18,7 +18,7 @@ var TopicsName config.Topics
 var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var Logged config.LoginYes
-var Name, Password, TopicText string
+var Name, Password, TopicText, UUID string
 var IdTopics int
 
 func main() {
@@ -34,6 +34,7 @@ func main() {
 	http.HandleFunc("/connect", LoggedOn)
 	http.HandleFunc("/topics", AllTopics)
 	http.HandleFunc("/singleTopics", singleTopics)
+	http.HandleFunc("/user_account", User_Info)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -81,8 +82,8 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 func singleTopics(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("State")
 	if state == "SingleTopic" {
-		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics")) 
-	}else if state == "PostTopic" {
+		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
+	} else if state == "PostTopic" {
 		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
 		TopicText = r.FormValue("text")
 		SetTopicText("PostTopicText")
@@ -101,6 +102,18 @@ func Info(w http.ResponseWriter, r *http.Request) {
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Logged)
+}
+
+// Display User Informations
+func User_Info(w http.ResponseWriter, r *http.Request) {
+	state := r.FormValue("state")
+	UUID = r.FormValue("Uuid")
+	Dataarray.Data = readuuid(state)
+	Dataarray.Connected = Logged.Connected
+	fmt.Println(r.FormValue("Uuid"))
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "user_account", Dataarray)
 }
 
 //page login
@@ -169,6 +182,9 @@ func readuuid(state string) []config.Account {
 			break
 		} else if state == "ShowAccount" {
 			result = append(result, Data)
+		} else if state == "user_account" && UUID == Data.Uuid.String() {
+			result = append(result, Data)
+			break
 		}
 	}
 	return result
@@ -288,6 +304,6 @@ func SetTopicText(state string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-			stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText)
+		stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText)
 	}
 }
