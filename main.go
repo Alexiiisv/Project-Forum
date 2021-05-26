@@ -26,7 +26,7 @@ type DataSend struct {
 
 type LoginYes struct {
 	Connected bool
-	Account Account
+	Account   Account
 }
 
 type Account struct {
@@ -198,7 +198,7 @@ func readUuid(state string) []DataSend {
 func GetCount(schemadottablename string, db *sql.DB) int {
 	var cnt int
 	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
-	return cnt 
+	return cnt
 }
 */
 
