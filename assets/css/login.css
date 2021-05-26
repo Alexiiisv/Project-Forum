@@ -51,6 +51,7 @@ body, * {
     flex-wrap: wrap;
     align-content: center;
     flex-direction: column;
+        
 }
 .buttoninput {
     font-size: 17px;
@@ -59,6 +60,18 @@ body, * {
     position: absolute;
     left: 273px;
     top: 132px;
+}
+.invalid {
+   color: red;
+}
+.invalid:before {
+   content: "✖";
+}
+.valid {
+    color: green; 
+}
+.valid:before {
+    content: "✔";
 }
 .place {
     display: flex;
