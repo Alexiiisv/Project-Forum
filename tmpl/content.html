@@ -15,3 +15,28 @@
 {{end}}
 <script type="text/javascript" src="../assets/js/singleTopic.js"></script>
 {{end}}
+
+{{define "Topics"}}
+    {{ $length := len .Name}}
+    {{if ge $length 1}}
+    <div class="allTopics">
+        <div class="topics">
+            {{range .Name}}
+            <form method="GET" action="/singleTopics" class="top">
+                <input type="hidden" value="{{.Id}}" name="IdTopics">
+                <input type="hidden" value="SingleTopic" name="State">
+                <button>
+                    <div class="Topics">
+                        <input class="category" type="hidden" value="{{.Category}}">
+                        <p>{{.Id}}</p>
+                        <p>{{.Title}}</p>
+                        <p>{{.Desc}}</p>
+                    </div>
+                </button>
+            </form>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+    <script type="text/javascript" src="../assets/js/Topics.js"></script>
+{{end}}

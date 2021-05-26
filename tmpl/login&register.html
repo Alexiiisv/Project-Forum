@@ -18,7 +18,7 @@
             <h2>Talk with your friend there</h2>
         </div>
         <div class="switch">
-            <p>You don't have an account ?</p>
+            <p class="noAcc">You don't have an account ?</p>
             <a href="/register" class="button">Click there to Create an account</a>
         </div>
         <div class="place">
@@ -33,10 +33,15 @@
                 {{end}}
             </div>
             <div class="form">
-                <form action="/connect" method="POST">
-                    <input type="text" placeholder="Name" name="Name" required>
-                    <input type="password" placeholder="Password" name="Password" required>
-                    <input type="submit" value="Login In">
+                <div class="name">
+                    <p class="Inname">Name</p>
+                    <p class="Inname">Password</p>
+                    <br>
+                </div>
+                <form action="/connect" method="POST" class="FormBlock">
+                    <input type="text" name="Name" required>
+                    <input type="password" name="Password" required>
+                    <input type="submit" value="Login In" class="FormBlockInput">
                 </form>
             </div>
         </div>
@@ -66,8 +71,8 @@
             <h2>Talk with your friend there</h2>
         </div>
         <div class="switch">
-            <p>You don't have an account ?</p>
-            <a href="/login" class="button">Click there to Create an account</a>
+            <p class="Acc">Do you have an account ?</p>
+            <a href="/login" class="button">Click there to login with an account</a>
         </div>
         <div class="place">
             <div class="message">

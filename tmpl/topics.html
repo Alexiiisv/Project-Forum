@@ -20,27 +20,37 @@
             <h1>topics</h1>
             <h2>Show all topics existing on the site</h2>
         </div>
-        {{ $length := len .Name}}
-        {{if ge $length 1}}
-        <div class="allTopics">
-            <div class="topics">
-                {{range .Name}}
-                <form method="GET" action="/singleTopics">
-                    <input type="hidden" value="{{.Id}}" name="IdTopics">
-                    <input type="hidden" value="SingleTopic" name="State">
-                    <button>
-                        <div class="Topics">
-                            <p>{{.Id}}</p>
-                            <p>{{.Title}}</p>
-                            <p>{{.Desc}}</p>
-                        </div>
-                    </button>
-                </form>
-                {{end}}
-            </div>
+        {{if .Connected}}
+        <div class="inputTopic">
+            <form action="/CreateTopicInfo" method="POST">
+                <input type="hidden" value="CreateTopicInfo" name="State">
+                <input type="submit">
+            </form>
         </div>
+        {{else}}
+        <div class="connectinput">you must be connected with an <a href="/login"><b>account</b></a> to be able to write
+            a comment</div>
         {{end}}
-    </div </body>
+        <div class="filter">
+            <select class="selectFilter" id="select" onchange="select();">
+                <option value="All the topics">All the topics</option>
+                <option value="Informatique">Informatique</option>
+                <option value="Jeux Video">Jeux Video</option>
+                <option value="Musique">Musique</option>
+                <option value="Design">Design</option>
+                <option value="Communication">Communication</option>
+                <option value="Animation3D">Animation3D</option>
+                <option value="NSFW">NSFW</option>
+                <option value="Anime">Anime</option>
+                <option value="Manga">Manga</option>
+                <option value="" hidden selected></option>
+            </select>
+        </div>
+        
+        {{template "Topics" .}}
+        {{template "footer" .}}
+    </div>
+</body>
 
 </html>
 {{end}}
@@ -77,11 +87,73 @@
             </form>
         </div>
         {{else}}
-        <div class="connectinput">you must be connected with an <a href="/login"><b>account</b></a> to be able to write a comment</div>
+        <div class="connectinput">you must be connected with an <a href="/login"><b>account</b></a> to be able to write
+            a comment</div>
         {{end}}
         {{template "SingleTopic" .}}
         {{template "footer" .}}
-    </div </body>
+    </div>
+</body>
+
+</html>
+{{end}}
+
+<!--
+    Template for creation Topic
+-->
+{{define "CreateTopicInfo"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/CreateTopicInfo.css">
+    <title>Project Forum</title>
+</head>
+
+<body>
+    {{template "header" .}}
+    <div class="page-index">
+        <div class="title">
+            <h1>Create a Topic</h1>
+            <h2>Create a topic</h2>
+        </div>
+        <div class="inputTopic">
+            <div class="createTopic">
+                <form action="/topics" method="POST" class="aaya">
+                    <input type="hidden" value="CreateTopicInfo" name="State">
+                    <input type="text" name="Title">
+                    <input type="text" name="Description">
+                    <div class="category">
+                        <table>
+                            <tr>
+                                <td><input type="checkbox" value="true" name="Informatique">Informatique</td>
+                                <td><input type="checkbox" value="true" name="Jeux Video">Jeux Video</td>
+                                <td><input type="checkbox" value="true" name="Musique">Musique</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" value="true" name="Design">Design</td>
+                                <td><input type="checkbox" value="true" name="Communication">Communication</td>
+                                <td><input type="checkbox" value="true" name="Animation3D">Animation 3D</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" value="true" name="NSFW">NSFW</td>
+                                <td><input type="checkbox" value="true" name="Anime">Anime</td>
+                                <td><input type="checkbox" value="true" name="Manga">Manga</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <input type="submit">
+                </form>
+                
+            </div>
+
+        </div>
+        {{template "footer" .}}
+    </div>
+</body>
 
 </html>
 {{end}}
