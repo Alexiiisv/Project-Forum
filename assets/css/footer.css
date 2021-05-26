@@ -1,13 +1,15 @@
 .footer {
     height: 300px;
     width: 100vw;
-    background-color: rgb(44,44,44);
+    background-image: linear-gradient(to bottom right, grey, lightslategray); 
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    bottom: 0;
 }
 .footer-container {
-    height: 70%;
+    height: 100%;
     width: 1500px;
     display: flex;
     justify-content: space-evenly;
@@ -22,11 +24,33 @@
     cursor: pointer;
     text-align: left;
 }
-.logo-footer img {
-    height: 50px;
-}
 .os img {
     border-radius: 10px;
     cursor: pointer;
     height: 50px;
+}
+.github {
+position: absolute;
+bottom: 0px;
+margin-left: auto;
+margin-right: auto;
+z-index: 2;
+left: 50%;
+}
+.s-column{
+    position: absolute;
+    left: 30px;
+    bottom: 20px;
+    top: 15%; 
+    z-index: 1;
+}
+.aboutus{
+    position: absolute;
+    bottom: 10px;
+    left: 25%;
+}
+.contactus{
+    position: absolute;
+    bottom: 10px;
+    left: 75%;
 }
