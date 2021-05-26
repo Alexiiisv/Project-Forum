@@ -9,8 +9,8 @@ body, * {
 .page-index {
     width: 100vw;
     height: 2150px;
-    background-color: #eee;
     display: block;
+    background-color: #eee;
     justify-content: center;
     align-items: center;
 }
@@ -19,14 +19,14 @@ body, * {
     transform: translate(0px, 130px);
     height: 100px;
 }
-.allAccount {
+.Info {
     width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #eee;
 }
-.Account {
+.less-essential {
     width: 350px;
     margin: 20px 20px 20px 20px;
     border: solid 2px black;
@@ -36,11 +36,30 @@ body, * {
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
+    align-content: center;
+    flex-direction: column;
 }
-.account {
+.essential {
     margin: 150px 0px 120px 0px;
-    width: 1200px;
+    width: auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 50px;
+}
+.account {
+    display: flex;
+    margin-top: 10%;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 200px;
+}
+.AccountImg {
+    border-radius: 50%;
+    clip-path: ellipse(50% 50%);
+}
+.pp {
+    width: 40%;
+    height: 40%;
 }

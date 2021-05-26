@@ -1,4 +1,4 @@
-.header {
+.header:not(.hide) {
     background: transparent;
     position: fixed;
     width: 100vw;
@@ -66,26 +66,27 @@
     transition: 0.7s;
 }
 
-.test {
+.Index {
     margin: 15px 0px 0px -100px;
     border: black 2px solid;
     border-radius: 10px;
     min-width: 100px;
 }
-.testt {
+.Index-body {
 
 }
 
-.testtt {
+.Index-text {
     font-size: 21px;
     padding-top: 4px;
     padding-left: 14px;
 }
 .hide {
-    display: none;
-    top: 34px;
-    position: absolute;
-    right: 410px;
+    transform: translate(1463px);
+    width: 50px;
+    border: black 2px solid;
+    border-radius: 5px;
+    z-index: 1;
 }
 .on {
     display: block;

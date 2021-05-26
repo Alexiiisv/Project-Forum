@@ -1,12 +1,21 @@
 var btn = document.querySelector(".info");
 var toshow = document.querySelector(".hide");
-btn.addEventListener("mouseover", event => {
-    toshow.classList.add("on");
-    toshow.classList.remove("off");
-});
-btn.addEventListener("mouseout", event => {
-    setTimeout(function() {
-        toshow.classList.add("off");
-        toshow.classList.remove("on");
-    }, 2000);
-});
+var test = true;
+
+toshow.classList.add("off");
+if (btn != null) {
+    btn.addEventListener("mouseover", event => {
+        test = false;
+        toshow.classList.add("on");
+        toshow.classList.remove("off");
+    });
+    btn.addEventListener("mouseout", event => {
+        test = true;
+        setTimeout(function() {
+            if (test) {
+                toshow.classList.add("off");
+                toshow.classList.remove("on");
+            }
+        }, 2000);
+    });
+}
