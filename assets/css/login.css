@@ -66,18 +66,6 @@ body, * {
     left: 273px;
     top: 132px;
 }
-.invalid {
-   color: red;
-}
-.invalid:before {
-   content: "✖";
-}
-.valid {
-    color: green; 
-}
-.valid:before {
-    content: "✔";
-}
 .place {
     display: flex;
     justify-content: center;

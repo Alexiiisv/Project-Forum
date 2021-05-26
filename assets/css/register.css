@@ -81,3 +81,20 @@ body, * {
 .Acc {
     text-decoration: underline;
 }
+.inputbtn {
+    display: flex;
+    justify-content: center;
+    padding-top: 2%;
+}
+.invalid {
+    color: red;
+ }
+ .invalid:before {
+    content: "✖";
+ }
+ .valid {
+     color: green; 
+ }
+ .valid:before {
+     content: "✔";
+ }
