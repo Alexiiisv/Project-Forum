@@ -1,21 +1,12 @@
-var myInput = document.getElementById("psw");
+var myInput = document.getElementById("pass1");
 var letter = document.getElementById("letter");
 var capital = document.getElementById("capital");
 var number = document.getElementById("number");
 var length = document.getElementById("length");
-
-// When the user clicks on the password field, show the message box
-myInput.onfocus = function() {
-  document.getElementById("message").style.display = "block";
-}
-
-// When the user clicks outside of the password field, hide the message box
-myInput.onblur = function() {
-  document.getElementById("message").style.display = "none";
-}
+var chars = document.getElementById("char");
 
 // When the user starts to type something inside the password field
-myInput.onkeyup = function() {
+ myInput.onkeyup = function() {
   // Validate lowercase letters
   var lowerCaseLetters = /[a-z]/g;
   if(myInput.value.match(lowerCaseLetters)) {
@@ -45,7 +36,6 @@ myInput.onkeyup = function() {
     number.classList.remove("valid");
     number.classList.add("invalid");
   }
-
   // Validate length
   if(myInput.value.length >= 8) {
     length.classList.remove("invalid");
@@ -54,4 +44,13 @@ myInput.onkeyup = function() {
     length.classList.remove("valid");
     length.classList.add("invalid");
   }
+ // Valide Char
+ var char =/[@$!%*?&]/g;
+ if(myInput.value.match(char)) {
+   chars.classList.remove("invalid");
+   chars.classList.add("valid");
+ } else {
+  chars.classList.remove("valid");
+  chars.classList.add("invalid");
+ }
 }

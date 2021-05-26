@@ -43,6 +43,7 @@ type TName struct {
 	Id    int
 	Title string
 	Desc  string
+	Category string
 }
 
 type TContent struct {
