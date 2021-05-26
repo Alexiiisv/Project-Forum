@@ -1,5 +1,5 @@
 .footer {
-    height: 300px;
+    height: 23%;
     width: 100vw;
     background-image: linear-gradient(to bottom right, grey, lightslategray); 
     display: flex;
@@ -7,6 +7,7 @@
     align-items: center;
     position: absolute;
     bottom: 0;
+    z-index: 3;
 }
 .footer-container {
     height: 100%;
@@ -17,7 +18,7 @@
 }
 .footer p, .footer h3, .footer a {
     color: white;
-    margin: 0px 0px 15px 0px;
+    margin: 0px 0px 6px 0px;
     font-family: system-ui;
 }
 .footer p {
@@ -41,8 +42,9 @@ left: 50%;
     position: absolute;
     left: 30px;
     bottom: 20px;
-    top: 15%; 
+    top: 25px; 
     z-index: 1;
+    
 }
 .aboutus{
     position: absolute;
