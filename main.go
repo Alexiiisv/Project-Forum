@@ -81,8 +81,8 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 func singleTopics(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("State")
 	if state == "SingleTopic" {
-		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics")) 
-	}else if state == "PostTopic" {
+		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
+	} else if state == "PostTopic" {
 		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
 		TopicText = r.FormValue("text")
 		SetTopicText("PostTopicText")
@@ -221,7 +221,6 @@ func GetTopicsData() config.TName {
 	return result
 }
 
-<<<<<<< HEAD
 /*
 // //get the length of a table
 func GetCount(schemadottablename string, db *sql.DB) int {
@@ -230,7 +229,6 @@ func GetCount(schemadottablename string, db *sql.DB) int {
 	return cnt
 }
 */
-=======
 //read database/store value from database to go code
 func GetTopicsContent() []config.TContent {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
@@ -238,7 +236,6 @@ func GetTopicsContent() []config.TContent {
 		log.Fatal(err)
 	}
 	sql_readall := `SELECT Id, Uuid, Text FROM Topics`
->>>>>>> e5920840c3f0de1bfc375f31ffa86853779f57ba
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -299,6 +296,6 @@ func SetTopicText(state string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-			stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText)
+		stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText)
 	}
 }
