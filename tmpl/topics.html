@@ -27,6 +27,7 @@
                 {{range .Name}}
                 <form method="GET" action="/singleTopics">
                     <input type="hidden" value="{{.Id}}" name="IdTopics">
+                    <input type="hidden" value="SingleTopic" name="State">
                     <button>
                         <div class="Topics">
                             <p>{{.Id}}</p>
@@ -66,20 +67,20 @@
             <h1>{{.Name.Title}}</h1>
             <h2>{{.Name.Desc}}</h2>
         </div>
-        {{ $length := len .Content}}
-        {{if ge $length 1}}
-        <div class="allTopics">
-            <div class="topics">
-                {{range .Content}}
-                    <div class="Topics">
-                        <p>{{.Id}}</p>
-                        <p>{{.Uuid}}</p>
-                        <p>{{.Text}}</p>
-                    </div>
-                {{end}}
-            </div>
+        {{if .Account.Connected}}
+        <div class="inputTopic">
+            <form action="/singleTopics" method="POST">
+                <input type="hidden" value="{{.Name.Id}}" name="IdTopics">
+                <input type="hidden" value="PostTopic" name="State">
+                <input type="text" maxlength="480" name="text">
+                <input type="submit">
+            </form>
         </div>
+        {{else}}
+        <div class="connectinput">you must be connected with an <a href="/login"><b>account</b></a> to be able to write a comment</div>
         {{end}}
+        {{template "SingleTopic" .}}
+        {{template "footer" .}}
     </div </body>
 
 </html>

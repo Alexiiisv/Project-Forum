@@ -9,7 +9,7 @@ body, * {
 .page-index {
     width: 100vw;
     height: 2150px;
-    /* background-color: black; */
+    background-color: #eee;
     display: block;
     justify-content: center;
     align-items: center;
@@ -24,7 +24,7 @@ body, * {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: #eee;
 }
 .Topics {
     width: 350px;

@@ -54,6 +54,7 @@ type TContent struct {
 type Topics struct {
 	Name    TName
 	Content []TContent
+	Accounts []Account
 	Account LoginYes
 }
 //all topics
