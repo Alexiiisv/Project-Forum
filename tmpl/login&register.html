@@ -53,13 +53,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<<<<<<< HEAD
     <link rel="stylesheet" href="./assets/css/login.css">
     
-=======
-    <link rel="stylesheet" href="./assets/css/register.css">
-    <script src="../assets/js/password_verification.js"></script>
->>>>>>> e5920840c3f0de1bfc375f31ffa86853779f57ba
     <title>Project Forum</title>
 </head>
 
@@ -84,7 +79,6 @@
                 <p id="char" class="invalid">A <b>special character (&£$!?%...)</b></p>
             </div>
             <div class="form">
-<<<<<<< HEAD
             <form action="/createAcc" method="POST">
                 <div class="input">
                     <input type="text" placeholder="Name" name="Name"
@@ -103,27 +97,6 @@
         
     </div >
     <script src="../assets/js/password_verification.js"></script>
-=======
-                <form action="/createAcc" method="POST" class="formCreate">
-                    <div class="input">
-                        <input type="text" placeholder="Name" name="Name"
-                            pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" required>
-                        <input type="password" placeholder="Password" name="Password" id="pass1"
-                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required>
-                        <input type="email" placeholder="example@gmail.com" name="Email"
-                            pattern="/^(|(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6})$/i"
-                            required>
-                    </div>
-                    <div class="inputbtn">
-                        <input type="submit" value="Create Account" class="buttoninput">
-                    </div>
-                </form>
-            </div>
-        </div>
-
-    </div>
-    {{template "footer" .}}
->>>>>>> e5920840c3f0de1bfc375f31ffa86853779f57ba
 </body>
 </html>
 {{end}}

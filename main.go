@@ -180,7 +180,7 @@ func readtopics() []config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description FROM Topics_Name`
+	sql_readall := `SELECT Id, Title, Description, Likes FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -202,7 +202,7 @@ func GetTopicsData() config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description FROM Topics_Name`
+	sql_readall := `SELECT Id, Title, Description, Likes FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {

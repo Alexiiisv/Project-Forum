@@ -43,6 +43,7 @@ type TName struct {
 	Id    int
 	Title string
 	Desc  string
+	Likes int
 }
 
 type TContent struct {
@@ -50,16 +51,18 @@ type TContent struct {
 	Uuid string
 	Text string
 }
+
 //single topics
 type Topics struct {
-	Name    TName
-	Content []TContent
+	Name     TName
+	Content  []TContent
 	Accounts []Account
-	Account LoginYes
+	Account  LoginYes
 }
+
 //all topics
 type AllTopics struct {
-	Name    []TName
+	Name      []TName
 	Connected bool
 }
 
