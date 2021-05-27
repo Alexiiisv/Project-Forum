@@ -48,8 +48,8 @@
         </div>
         
         {{template "Topics" .}}
-        {{template "footer" .}}
     </div>
+    {{template "footer" .}}
 </body>
 
 </html>
@@ -82,8 +82,8 @@
             <form action="/singleTopics" method="POST">
                 <input type="hidden" value="{{.Name.Id}}" name="IdTopics">
                 <input type="hidden" value="PostTopic" name="State">
-                <input type="text" maxlength="480" name="text">
-                <input type="submit">
+                <input type="text" maxlength="480" name="text" class="inputTextCom">
+                <input type="submit"  class="inputsubCom">
             </form>
         </div>
         {{else}}
@@ -91,8 +91,8 @@
             a comment</div>
         {{end}}
         {{template "SingleTopic" .}}
-        {{template "footer" .}}
     </div>
+    {{template "footer" .}}
 </body>
 
 </html>
@@ -151,8 +151,8 @@
             </div>
 
         </div>
-        {{template "footer" .}}
     </div>
+    {{template "footer" .}}
 </body>
 
 </html>

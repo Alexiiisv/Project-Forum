@@ -1,10 +1,6 @@
 var topic = document.querySelectorAll(".Topics");
 var AccName = document.querySelectorAll(".AccName");
-// console.log(AccName)
-// topic.forEach(element => {
-//     console.log("client " + element.clientHeight);
 
-// });
 function a() {
     console.log("c'est load")
         for (let i = 0; i < topic.length; i++) {

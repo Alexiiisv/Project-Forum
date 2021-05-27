@@ -1,3 +1,6 @@
+<!--
+    Template for the login
+-->
 {{define "login"}}
 <!DOCTYPE html>
 <html lang="en">
@@ -45,11 +48,17 @@
                 </form>
             </div>
         </div>
-    </div> </body>
+    </div>
+    
+    {{template "footer" .}}
+</body>
 
 </html>
 {{end}}
 
+<!--
+    Template for register
+-->
 {{define "register"}}
 <!DOCTYPE html>
 <html lang="en">
@@ -102,6 +111,7 @@
         
     </div >
     <script src="../assets/js/password_verification.js"></script>
+    {{template "footer" .}}
 </body>
 </html>
 {{end}}

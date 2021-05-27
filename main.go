@@ -66,7 +66,7 @@ func ShowAccount(w http.ResponseWriter, r *http.Request) {
 	Dataarray.Data = readuuid("ShowAccount")
 	Dataarray.Connected = Logged.Connected
 	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "accounts", Dataarray)
 }
 
@@ -358,3 +358,4 @@ func GetCategory(r *http.Request) string {
 	}
 	return result[:len(result)-1]
 }
+

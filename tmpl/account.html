@@ -20,33 +20,16 @@
             <h1>Accounts</h1>
             <h2>Show all accounts existing on the site</h2>
         </div>
-        {{ $length := len .Data}}
-        {{if ge $length 1}}
-        <div class="allAccount">
-            <div class="account">
-                {{range .Data}}
-                <form action="/user_account" method="POST">
-                    <div class="Account">
-                        <p>{{.Name}}</p>
-                        <p>{{.Uuid}}</p>
-                        <input type="hidden" value="{{.Uuid}}" name="Uuid">
-                        <input type="hidden" value="user_account" name="state">
-                        <input type="submit" value="OK">
-                    </div>
-
-                </form>
-                {{end}}
-            </div>
-        </div>
-        {{end}}
+        {{template "singleAccount" .}}
     </div>
+    {{template "footer" .}}
 </body>
 
 </html>
 {{end}}
 
 <!--
-    Template for a your account
+    Template for your account
 -->
 {{define "account"}}
 <!DOCTYPE html>
@@ -57,7 +40,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
-    <!-- <script src="../assets/js/profile_picture.js"></script> -->
+    <script type="text/javascript" src="../assets/js/AccountPict.js"></script>
     <title>Project Forum</title>
 </head>
 
@@ -78,8 +61,7 @@
 
                         
                     </div>
-                    <input type="file"
-                            onchange="document.getElementsByClassName('pp')[0].src=window.URL.createObjectURL(this.files[0])">
+                    <input type="file" onchange="document.getElementsByClassName('pp')[0].src= window.URL.createObjectURL(this.files[0]);">
                 </div>
                 <div class="less-essential">
                     <p>{{.Account.Password}}</p>
@@ -89,6 +71,7 @@
             </div>
         </div>
     </div>
+    {{template "footer" .}}
 </body>
 
 </html>
@@ -134,6 +117,7 @@
         </div>
     </div>
     {{end}}
+    {{template "footer" .}}
 </body>
 
 </html>
