@@ -18,8 +18,9 @@ var TopicsName config.Topics
 var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var Logged config.LoginYes
-var Name, Password, TopicText string
+var Name, Password, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category string
 var IdTopics int
+var CategoryName = []string{"Informatique", "Jeux Video", "Musique", "Design", "Communication", "Animation3D", "NSFW", "Anime", "Manga"}
 
 func main() {
 	fmt.Println("Please connect to\u001b[31m localhost", config.LocalhostPort, "\u001b[0m")
@@ -34,6 +35,8 @@ func main() {
 	http.HandleFunc("/connect", LoggedOn)
 	http.HandleFunc("/topics", AllTopics)
 	http.HandleFunc("/singleTopics", singleTopics)
+	http.HandleFunc("/user_account", User_Info)
+	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -63,18 +66,36 @@ func ShowAccount(w http.ResponseWriter, r *http.Request) {
 	Dataarray.Data = readuuid("ShowAccount")
 	Dataarray.Connected = Logged.Connected
 	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "accounts", Dataarray)
 }
 
 //page accounts
 func AllTopics(w http.ResponseWriter, r *http.Request) {
+	state := r.FormValue("State")
+	if state == "CreateTopicInfo" {
+		SetTopicsName = r.FormValue("Title")
+		SetTopicsDescription = r.FormValue("Description")
+		fmt.Println("Name : ", SetTopicsName, " Description : ", SetTopicsDescription)
+		Category = GetCategory(r)
+		SetTopicInfo(state)
+	}
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
 	fmt.Println(allTopics)
 	t := template.New("topics-template")
-	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html"))
+	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "topics", allTopics)
+}
+
+//page accounts
+func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
+	allTopics.Name = readtopics()
+	allTopics.Connected = Logged.Connected
+	fmt.Println(allTopics)
+	t := template.New("topics-template")
+	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
+	t.ExecuteTemplate(w, "CreateTopicInfo", allTopics)
 }
 
 //page accounts
@@ -101,6 +122,18 @@ func Info(w http.ResponseWriter, r *http.Request) {
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Logged)
+}
+
+// Display User Informations
+func User_Info(w http.ResponseWriter, r *http.Request) {
+	state := r.FormValue("state")
+	UUID = r.FormValue("Uuid")
+	Dataarray.Data = readuuid(state)
+	Dataarray.Connected = Logged.Connected
+	fmt.Println(r.FormValue("Uuid"))
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "user_account", Dataarray)
 }
 
 //page login
@@ -169,6 +202,9 @@ func readuuid(state string) []config.Account {
 			break
 		} else if state == "ShowAccount" {
 			result = append(result, Data)
+		} else if state == "user_account" && UUID == Data.Uuid.String() {
+			result = append(result, Data)
+			break
 		}
 	}
 	return result
@@ -180,7 +216,11 @@ func readtopics() []config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
+<<<<<<< HEAD
 	sql_readall := `SELECT Id, Title, Description, Likes FROM Topics_Name;`
+=======
+	sql_readall := `SELECT Id, Title, Description, Category FROM Topics_Name`
+>>>>>>> 8db03831f75080a9ce7beaa627b5509abca08f57
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -190,13 +230,13 @@ func readtopics() []config.TName {
 
 	var result []config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category)
 		result = append(result, TName)
 	}
 	return result
 }
 
-//read database/store value from database to go code
+//Get from a database the information about a topic
 func GetTopicsData() config.TName {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
 	if err != nil {
@@ -221,6 +261,7 @@ func GetTopicsData() config.TName {
 	return result
 }
 
+<<<<<<< HEAD
 /*
 // //get the length of a table
 func GetCount(schemadottablename string, db *sql.DB) int {
@@ -230,6 +271,9 @@ func GetCount(schemadottablename string, db *sql.DB) int {
 }
 */
 //read database/store value from database to go code
+=======
+//Get from a database the text written in a topic
+>>>>>>> 8db03831f75080a9ce7beaa627b5509abca08f57
 func GetTopicsContent() []config.TContent {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
 	if err != nil {
@@ -283,7 +327,7 @@ func saveUuid(state string) {
 	}
 }
 
-//write in a database
+//Set in a database the text written in a topic
 func SetTopicText(state string) {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
 	if err != nil {
@@ -299,3 +343,35 @@ func SetTopicText(state string) {
 		stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText)
 	}
 }
+
+//Set in a database the information about a topic
+func SetTopicInfo(state string) {
+	db, err := sql.Open("sqlite3", "./Database/Topics.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	if state == "CreateTopicInfo" {
+		stmt, err := db.Prepare("insert into Topics_Name(Title, Description, Category) values(?, ?, ?)")
+		if err != nil {
+			log.Fatal(err)
+		}
+		stmt.Exec(SetTopicsName, SetTopicsDescription, Category)
+	}
+}
+
+//
+func GetCategory(r *http.Request) string {
+	var result = ""
+	for _, v := range CategoryName {
+		a := r.FormValue(v)
+		b, _ := strconv.ParseBool(a)
+		if b {
+			result += v
+			result += ","
+		}
+	}
+	return result[:len(result)-1]
+}
+

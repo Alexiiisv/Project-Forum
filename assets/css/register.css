@@ -8,7 +8,7 @@ body, * {
 }
 .page-index {
     width: 100vw;
-    height: 800px;
+    height: 100vh;
     display: block;
     background-color: #eee;
     justify-content: center;
@@ -32,14 +32,19 @@ body, * {
 .button {
     height: 100px;
     display: flex;
-    justify-content: center;
+    width: 8%;
+    border: gray 3px solid;
+    border-radius: 12%;
     align-items: center;
+    padding-left: 1%;
+    padding-right: 1%;
 }
 .switch {
     display: flex;
     flex-direction: column;
     transform: translate(0px, 198px);
     align-items: center;
+    row-gap: 15px;
 }
 .message {
     width: 250px;
@@ -53,7 +58,8 @@ body, * {
     flex-direction: column;
 }
 .buttoninput {
-    font-size: 17px;
+    font-size: 15px;
+    font-weight: bold;
 }
 .place {
     display: flex;
@@ -72,3 +78,23 @@ body, * {
     align-items: center;
     justify-content: center;
 }
+.Acc {
+    text-decoration: underline;
+}
+.inputbtn {
+    display: flex;
+    justify-content: center;
+    padding-top: 2%;
+}
+.invalid {
+    color: red;
+ }
+ .invalid:before {
+    content: "✖";
+ }
+ .valid {
+     color: green; 
+ }
+ .valid:before {
+     content: "✔";
+ }

@@ -1,3 +1,6 @@
+<!--
+    Template for the login
+-->
 {{define "login"}}
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +21,7 @@
             <h2>Talk with your friend there</h2>
         </div>
         <div class="switch">
-            <p>You don't have an account ?</p>
+            <p class="noAcc">You don't have an account ?</p>
             <a href="/register" class="button">Click there to Create an account</a>
         </div>
         <div class="place">
@@ -33,18 +36,29 @@
                 {{end}}
             </div>
             <div class="form">
-                <form action="/connect" method="POST">
-                    <input type="text" placeholder="Name" name="Name" required>
-                    <input type="password" placeholder="Password" name="Password" required>
-                    <input type="submit" value="Login In">
+                <div class="name">
+                    <p class="Inname">Name</p>
+                    <p class="Inname">Password</p>
+                    <br>
+                </div>
+                <form action="/connect" method="POST" class="FormBlock">
+                    <input type="text" name="Name" required>
+                    <input type="password" name="Password" required>
+                    <input type="submit" value="Login In" class="FormBlockInput">
                 </form>
             </div>
         </div>
-    </div> </body>
+    </div>
+    
+    {{template "footer" .}}
+</body>
 
 </html>
 {{end}}
 
+<!--
+    Template for register
+-->
 {{define "register"}}
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +67,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./assets/css/login.css">
+    <link rel="stylesheet" href="./assets/css/register.css">
     
     <title>Project Forum</title>
 </head>
@@ -66,8 +80,8 @@
             <h2>Talk with your friend there</h2>
         </div>
         <div class="switch">
-            <p>You don't have an account ?</p>
-            <a href="/login" class="button">Click there to Create an account</a>
+            <p class="Acc">Do you have an account ?</p>
+            <a href="/login" class="button">Click there to login with an account</a>
         </div>
         <div class="place">
             <div class="message">
@@ -97,6 +111,7 @@
         
     </div >
     <script src="../assets/js/password_verification.js"></script>
+    {{template "footer" .}}
 </body>
 </html>
 {{end}}

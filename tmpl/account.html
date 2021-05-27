@@ -20,26 +20,16 @@
             <h1>Accounts</h1>
             <h2>Show all accounts existing on the site</h2>
         </div>
-        {{ $length := len .Data}}
-        {{if ge $length 1}}
-        <div class="allAccount">
-            <div class="account">
-                {{range .Data}}
-                <div class="Account">
-                    <p>{{.Name}}</p>
-                    <p>{{.Uuid}}</p>
-                </div>
-                {{end}}
-            </div>
-        </div>
-        {{end}}
-    </div </body>
+        {{template "singleAccount" .}}
+    </div>
+    {{template "footer" .}}
+</body>
 
 </html>
 {{end}}
 
 <!--
-    Template for a single account
+    Template for your account
 -->
 {{define "account"}}
 <!DOCTYPE html>
@@ -50,7 +40,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
-    <!-- <script src="../assets/js/profile_picture.js"></script> -->
+    <script type="text/javascript" src="../assets/js/AccountPict.js"></script>
     <title>Project Forum</title>
 </head>
 
@@ -66,10 +56,12 @@
                 <div class="essential">
                     <h3>{{.Account.Name}}</h3>
                     <!-- <img src="../assets/image/Icon/account-test.png"> -->
-                    <img class="pp" alt="" />
+                    <div class="container">
+                        <img class="pp" alt="" />
 
-                    <input type="file"
-                        onchange="document.getElementsByClassName('pp')[0].src=window.URL.createObjectURL(this.files[0])">
+                        
+                    </div>
+                    <input type="file" onchange="document.getElementsByClassName('pp')[0].src= window.URL.createObjectURL(this.files[0]);">
                 </div>
                 <div class="less-essential">
                     <p>{{.Account.Password}}</p>
@@ -78,7 +70,55 @@
                 </div>
             </div>
         </div>
-    </div </body>
+    </div>
+    {{template "footer" .}}
+</body>
+
+</html>
+{{end}}
+
+
+<!--
+    Template for a user account
+-->
+{{define "user_account"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/account.css">
+    <!-- <script src="../assets/js/profile_picture.js"></script> -->
+    <title>Project Forum</title>
+</head>
+
+<body>
+    {{template "header" .}}
+    {{range .Data}}
+    <div class="page-index">
+        <div class="title">
+            <h1>Account</h1>
+            <h2>Informations about {{.Name}} account</h2>
+        </div>
+        <div class="Info">
+            <div class="account">
+                <div class="essential">
+                    <h3>{{.Name}}</h3>
+                    <!-- <img src="../assets/image/Icon/account-test.png"> -->
+
+                </div>
+                <div class="less-essential">
+                    <p>{{.Email}}</p>
+                    <p>{{.Uuid}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    {{template "footer" .}}
+</body>
 
 </html>
 {{end}}
