@@ -216,7 +216,7 @@ func readtopics() []config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description, Likes FROM Topics_Name;`
+	sql_readall := `SELECT Id, Title, Description, Category FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -265,6 +265,7 @@ func GetCount(schemadottablename string, db *sql.DB) int {
 	return cnt
 }
 */
+
 //read database/store value from database to go code
 func GetTopicsContent() []config.TContent {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
