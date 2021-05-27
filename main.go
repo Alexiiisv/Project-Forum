@@ -216,7 +216,7 @@ func readtopics() []config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description, Category FROM Topics_Name`
+	sql_readall := `SELECT Id, Title, Description, Likes FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -238,7 +238,7 @@ func GetTopicsData() config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description FROM Topics_Name`
+	sql_readall := `SELECT Id, Title, Description, Likes FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -257,7 +257,15 @@ func GetTopicsData() config.TName {
 	return result
 }
 
-//Get from a database the text written in a topic
+/*
+// //get the length of a table
+func GetCount(schemadottablename string, db *sql.DB) int {
+	var cnt int
+	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
+	return cnt
+}
+*/
+//read database/store value from database to go code
 func GetTopicsContent() []config.TContent {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
 	if err != nil {
