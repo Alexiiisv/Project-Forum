@@ -82,7 +82,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 	}
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
-	fmt.Println(allTopics)
+	//fmt.Println(allTopics)
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "topics", allTopics)
@@ -92,7 +92,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
-	fmt.Println(allTopics)
+	//fmt.Println(allTopics)
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "CreateTopicInfo", allTopics)
@@ -130,7 +130,7 @@ func User_Info(w http.ResponseWriter, r *http.Request) {
 	UUID = r.FormValue("Uuid")
 	Dataarray.Data = readuuid(state)
 	Dataarray.Connected = Logged.Connected
-	fmt.Println(r.FormValue("Uuid"))
+	//fmt.Println(r.FormValue("Uuid"))
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "user_account", Dataarray)
@@ -238,7 +238,7 @@ func GetTopicsData() config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description, Likes FROM Topics_Name;`
+	sql_readall := `SELECT Id, Title, Description, Like FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -367,4 +367,3 @@ func GetCategory(r *http.Request) string {
 	}
 	return result[:len(result)-1]
 }
-

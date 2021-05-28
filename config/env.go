@@ -40,11 +40,11 @@ type LoginYes struct {
 }
 
 type TName struct {
-	Id    int
-	Title string
-	Desc  string
-	Category  string
-	Likes int
+	Id       int
+	Title    string
+	Desc     string
+	Category string
+	Likes    int
 }
 
 type TContent struct {
