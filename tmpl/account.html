@@ -55,11 +55,13 @@
             <div class="account">
                 <div class="essential">
                     <h3>{{.Account.Name}}</h3>
-                    <!-- <img src="../assets/image/Icon/account-test.png"> -->
                     <div class="container">
-                        <img class="pp" alt="" />
+                        <img class="pp" src="..\assets\image\icon\{{.Account.Profile_Picture}}" />
                     </div>
-                    <input type="file" onchange="document.getElementsByClassName('pp')[0].src= window.URL.createObjectURL(this.files[0]);">
+                    <form method="POST" enctype="multipart/form-data" action="/upload_pp">
+                        <input type="file" name="AddPP">
+                        <input type="submit">
+                    </form>
                 </div>
                 <div class="less-essential">
                     <p>{{.Account.Password}}</p>

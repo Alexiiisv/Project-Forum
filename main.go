@@ -3,10 +3,14 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"text/template"
+	"time"
 
 	config "github.com/Alexiiisv/Project-Forum/v2/config"
 )
@@ -21,6 +25,7 @@ var Logged config.LoginYes
 var Name, Password, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category string
 var IdTopics int
 var CategoryName = []string{"Informatique", "Jeux Video", "Musique", "Design", "Communication", "Animation3D", "NSFW", "Anime", "Manga"}
+var pp_name string
 
 func main() {
 	fmt.Println("Please connect to\u001b[31m localhost", config.LocalhostPort, "\u001b[0m")
@@ -37,6 +42,7 @@ func main() {
 	http.HandleFunc("/singleTopics", singleTopics)
 	http.HandleFunc("/user_account", User_Info)
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
+	http.HandleFunc("/upload_pp", uploadHandler)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -151,6 +157,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "register", Dataarray)
 }
 
+// Connection to account
 func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	Name = r.FormValue("Name")
 	Password = r.FormValue("Password")
@@ -158,6 +165,7 @@ func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	if len(Dataarray.Data) == 1 {
 		Logged.Account = Dataarray.Data[0]
 		Logged.Connected = true
+		fmt.Print(Logged.Account)
 		index(w, r)
 	} else {
 		Login(w, r)
@@ -168,6 +176,87 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	Logged.Account = config.Account{}
 	Logged.Connected = false
 	Login(w, r)
+}
+
+// TODO: PUSH into UUID Cringe ?
+func uploadHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// 32 MB is the default used by FormFile
+	if err := r.ParseMultipartForm(32 << 20); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// get a reference to the fileHeaders
+	files := r.MultipartForm.File["AddPP"]
+
+	for _, fileHeader := range files {
+		if fileHeader.Size > config.MAX_UPLOAD_SIZE {
+			http.Error(w, fmt.Sprintf("The uploaded image is too big: %s. Please use an image less than 1MB in size", fileHeader.Filename), http.StatusBadRequest)
+			return
+		}
+
+		file, err := fileHeader.Open()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		defer file.Close()
+
+		buff := make([]byte, 512)
+		_, err = file.Read(buff)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		filetype := http.DetectContentType(buff)
+		if filetype != "image/jpeg" && filetype != "image/png" {
+			http.Error(w, "The provided file format is not allowed. Please upload a JPEG or PNG image", http.StatusBadRequest)
+			return
+		}
+
+		_, err = file.Seek(0, io.SeekStart)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		err = os.MkdirAll("./assets/image/icon", os.ModePerm)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		pp_name = strconv.FormatInt(time.Now().UnixNano(), 10)
+		//fmt.Println(pp_name)
+		f, err := os.Create(fmt.Sprintf("./assets/image/icon/%s%s", pp_name, filepath.Ext(fileHeader.Filename)))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		defer f.Close()
+
+		pr := &config.Progress{
+			TotalSize: fileHeader.Size,
+		}
+
+		_, err = io.Copy(f, io.TeeReader(file, pr))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+
+	fmt.Fprintf(w, "Upload successful")
+	state := "pp"
+	saveUuid(state)
 }
 
 /*
@@ -185,7 +274,7 @@ func readuuid(state string) []config.Account {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Name, Password, Email, Uuid FROM Accounts`
+	sql_readall := `SELECT Name, Password, Email, Uuid, Profile_Picture FROM Accounts`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -195,7 +284,7 @@ func readuuid(state string) []config.Account {
 
 	var result []config.Account
 	for rows.Next() {
-		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid)
+		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid, &Data.Profile_Picture)
 		if state == "LoggedOn" && config.CheckPasswordHash(Password, Data.Password) && Data.Name == Name {
 			Data.Password = Password
 			result = append(result, Data)
@@ -298,6 +387,7 @@ func GetTopicsContent() []config.TContent {
 	return result
 }
 
+//TODO: Why don't push into DB ?
 //write in a database
 func saveUuid(state string) {
 	db, err := sql.Open("sqlite3", "./Database/User.db")
@@ -317,6 +407,17 @@ func saveUuid(state string) {
 			}
 			stmt.Exec(Dataarray.Data[index].Name, string(config.HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String())
 		}
+	} else if state == "pp" {
+		if err != nil {
+			panic(err)
+		}
+		stmt, err := db.Prepare("update Accounts set Profile_Picture = ? where Uuid = ?")
+		if err != nil {
+			log.Fatal(err)
+		}
+		link := pp_name
+		link += ".png"
+		stmt.Exec(link, Logged.Account.Uuid.String())
 	}
 }
 
