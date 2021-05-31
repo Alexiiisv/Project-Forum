@@ -227,7 +227,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = os.MkdirAll("./assets/image/icon", os.ModePerm)
+		err = os.MkdirAll("./assets/image/Account_pp", os.ModePerm)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -235,7 +235,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 		pp_name = strconv.FormatInt(time.Now().UnixNano(), 10)
 		//fmt.Println(pp_name)
-		f, err := os.Create(fmt.Sprintf("./assets/image/icon/%s%s", pp_name, filepath.Ext(fileHeader.Filename)))
+		f, err := os.Create(fmt.Sprintf("./assets/image/Account_pp/%s%s", pp_name, filepath.Ext(fileHeader.Filename)))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -415,7 +415,7 @@ func saveUuid(state string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		toremove := "./assets/image/icon/"
+		toremove := "./assets/image/Account_pp/"
 		toremove += Logged.Account.Profile_Picture
 		os.Remove(toremove)
 		link := pp_name
