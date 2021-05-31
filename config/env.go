@@ -33,6 +33,7 @@ type Account struct {
 type AllAccount struct {
 	Connected bool
 	Data      []Account
+	Account   Account
 }
 
 type LoginYes struct {
@@ -66,6 +67,7 @@ type Topics struct {
 type AllTopics struct {
 	Name      []TName
 	Connected bool
+	Account Account
 }
 
 //give a unique uuid to a user

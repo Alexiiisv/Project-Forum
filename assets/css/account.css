@@ -67,10 +67,6 @@ body, * {
     clip-path: ellipse(50% 50%);
 }
 
-.pp {
-    width: 40%;
-    height: 40%;
-}
 
 .container {
     display: flex;
@@ -84,5 +80,6 @@ body, * {
 .pp {
     display: inline;
     width: 100%;
+    height: 100%;
     object-fit: cover;
 }

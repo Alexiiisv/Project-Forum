@@ -51,10 +51,9 @@ func main() {
 
 //page index
 func index(w http.ResponseWriter, r *http.Request) {
-	Dataarray.Connected = Logged.Connected
 	t := template.New("index-template")
 	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "index", Dataarray)
+	t.ExecuteTemplate(w, "index", Logged)
 }
 
 //create account
@@ -71,6 +70,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 func ShowAccount(w http.ResponseWriter, r *http.Request) {
 	Dataarray.Data = readuuid("ShowAccount")
 	Dataarray.Connected = Logged.Connected
+	Dataarray.Account = Logged.Account
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "accounts", Dataarray)
@@ -88,6 +88,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 	}
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
+	allTopics.Account = Logged.Account
 	//fmt.Println(allTopics)
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))

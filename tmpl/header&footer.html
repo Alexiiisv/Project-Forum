@@ -24,7 +24,7 @@
                 </div>
                 {{if .Connected}}
                 <div class="info">
-                    <a id="Info" href="information">Info</a>
+                    <img id="Info" class="info_pp" src="../assets/image/Account_pp/{{.Account.Profile_Picture}}">
                 </div>
                 {{else}}
                 <div class="login">
@@ -35,7 +35,9 @@
         </div>
     </div>
     <div class="hide">
-        <a id="logout" href="logout">logout</a>
+        <a id="profile" href="information">Profile</a>
+        <a id="settings" href="settings">Settings</a>
+        <a id="logout" href="logout">Logout</a>
     </div>
     <script type="text/javascript" src="../assets/js/header.js"></script>
 </div>
