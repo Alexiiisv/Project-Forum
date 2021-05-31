@@ -136,6 +136,7 @@ func User_Info(w http.ResponseWriter, r *http.Request) {
 	UUID = r.FormValue("Uuid")
 	Dataarray.Data = readuuid(state)
 	Dataarray.Connected = Logged.Connected
+	fmt.Println(Dataarray)
 	//fmt.Println(r.FormValue("Uuid"))
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
@@ -165,7 +166,7 @@ func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	if len(Dataarray.Data) == 1 {
 		Logged.Account = Dataarray.Data[0]
 		Logged.Connected = true
-		fmt.Print(Logged.Account)
+		fmt.Println(Logged.Account)
 		index(w, r)
 	} else {
 		Login(w, r)
@@ -397,7 +398,7 @@ func saveUuid(state string) {
 	defer db.Close()
 
 	if state == "accounts" {
-		stmt, err := db.Prepare("insert into Accounts(Name, Password, Email, Uuid) values(?, ?, ?, ?)")
+		stmt, err := db.Prepare("insert into Accounts(Name, Password, Email, Uuid, Profile_Picture) values(?, ?, ?, ?, ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -405,7 +406,7 @@ func saveUuid(state string) {
 			if config.UserExists(db, Dataarray.Data[index].Uuid.String()) {
 				continue
 			}
-			stmt.Exec(Dataarray.Data[index].Name, string(config.HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String())
+			stmt.Exec(Dataarray.Data[index].Name, string(config.HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String(), "Standard_Pic.png")
 		}
 	} else if state == "pp" {
 		if err != nil {
@@ -415,9 +416,12 @@ func saveUuid(state string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		toremove := "./assets/image/Account_pp/"
-		toremove += Logged.Account.Profile_Picture
-		os.Remove(toremove)
+		if Logged.Account.Profile_Picture != "Standard_Pic.png" {
+			toremove := "./assets/image/Account_pp/"
+			toremove += Logged.Account.Profile_Picture
+			os.Remove(toremove)
+		}
+		
 		link := pp_name
 		link += ".png"
 		Logged.Account.Profile_Picture = link

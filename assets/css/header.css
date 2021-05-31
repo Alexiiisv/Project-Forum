@@ -82,7 +82,7 @@
     padding-left: 14px;
 }
 .hide {
-    transform: translate(1463px);
+    transform: translate(calc(75vw + 32%));
     width: 50px;
     border: black 2px solid;
     border-radius: 5px;
