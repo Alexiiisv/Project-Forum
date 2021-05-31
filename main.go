@@ -18,7 +18,7 @@ var TopicsName config.Topics
 var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var Logged config.LoginYes
-var Name, Password, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category string
+var Name, Password, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Likes, Category string
 var IdTopics int
 var CategoryName = []string{"Informatique", "Jeux Video", "Musique", "Design", "Communication", "Animation3D", "NSFW", "Anime", "Manga"}
 
@@ -37,6 +37,8 @@ func main() {
 	http.HandleFunc("/singleTopics", singleTopics)
 	http.HandleFunc("/user_account", User_Info)
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
+	http.HandleFunc("/like", Like)
+	// http.HandleFunc("/Like", Like)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -76,13 +78,13 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 	if state == "CreateTopicInfo" {
 		SetTopicsName = r.FormValue("Title")
 		SetTopicsDescription = r.FormValue("Description")
-		fmt.Println("Name : ", SetTopicsName, " Description : ", SetTopicsDescription)
+		// fmt.Println("Name : ", SetTopicsName, " Description : ", SetTopicsDescription)
 		Category = GetCategory(r)
 		SetTopicInfo(state)
 	}
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
-	fmt.Println(allTopics)
+	// fmt.Println(allTopics.Name)
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "topics", allTopics)
@@ -130,7 +132,7 @@ func User_Info(w http.ResponseWriter, r *http.Request) {
 	UUID = r.FormValue("Uuid")
 	Dataarray.Data = readuuid(state)
 	Dataarray.Connected = Logged.Connected
-	fmt.Println(r.FormValue("Uuid"))
+	// fmt.Println(r.FormValue("Uuid"))
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "user_account", Dataarray)
@@ -216,7 +218,7 @@ func readtopics() []config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description, Category FROM Topics_Name;`
+	sql_readall := `SELECT Id, Title, Description, Category, Like FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -226,7 +228,7 @@ func readtopics() []config.TName {
 
 	var result []config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Like)
 		result = append(result, TName)
 	}
 	return result
@@ -238,7 +240,7 @@ func GetTopicsData() config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description, Likes FROM Topics_Name;`
+	sql_readall := `SELECT Id, Title, Description, Like FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -248,7 +250,7 @@ func GetTopicsData() config.TName {
 
 	var result config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Like)
 		if TName.Id == IdTopics {
 			result = TName
 			break
@@ -368,3 +370,11 @@ func GetCategory(r *http.Request) string {
 	return result[:len(result)-1]
 }
 
+func Like(w http.ResponseWriter, r *http.Request) {
+
+	Likes = r.FormValue("Like")
+	fmt.Println(Likes)
+	t := template.New("like-template")
+	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
+	t.ExecuteTemplate(w, "singleTopics", TopicsName)
+}

@@ -77,6 +77,12 @@
             <h1>{{.Name.Title}}</h1>
             <h2>{{.Name.Desc}}</h2>
         </div>
+        <div class="couille">
+            <form action="/like" method="POST">
+            <input type="submit" value= "{{.Name.Like}}" name="Like">
+            {{.Name.Like}}
+            </form>
+        </div>
         {{if .Account.Connected}}
         <div class="inputTopic">
             <form action="/singleTopics" method="POST">
