@@ -69,7 +69,9 @@ body, * {
 
 .pp {
     width: 40%;
-    height: 40%;
+    display: inline;
+    width: 100%;
+    object-fit: cover;
 }
 
 .container {
@@ -82,7 +84,5 @@ body, * {
 }
 
 .pp {
-    display: inline;
-    width: 100%;
-    object-fit: cover;
+    
 }
