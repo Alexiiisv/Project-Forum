@@ -40,6 +40,16 @@
         <a id="logout" href="logout">Logout</a>
     </div>
     <script type="text/javascript" src="../assets/js/header.js"></script>
+    <script>
+        window.onscroll = () => {
+         var navbar = document.getElementsByClassName("header")[0];
+         if (window.scrollY > 1) {
+           navbar.classList.add("u-scrolled");
+         } else {
+           navbar.classList.remove("u-scrolled");
+         }
+       };
+    </script>
 </div>
 {{end}}
 

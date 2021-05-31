@@ -9,7 +9,7 @@ body, * {
 }
 .page-index {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     display: block;
     justify-content: center;
     align-items: center;
@@ -92,4 +92,18 @@ body, * {
 }
 .inputsubCom {
     width: 9vw;
+}
+.pp {
+    width: 40%;
+    display: inline;
+    width: 100%;
+    object-fit: cover;
+}
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    min-height: 150px;
+    border: dotted;
 }

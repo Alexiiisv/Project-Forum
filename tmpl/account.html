@@ -59,7 +59,7 @@
                         <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
                     </div>
                     <form method="POST" enctype="multipart/form-data" action="/upload_pp">
-                        <input type="file" name="AddPP">
+                        <input type="file" name="AddPP" accept="image/png">
                         <input type="submit">
                     </form>
                 </div>
@@ -106,7 +106,9 @@
             <div class="account">
                 <div class="essential">
                     <h3>{{.Name}}</h3>
-                    <img src="../assets/image/Account_pp/{{.Profile_Picture}}">
+                    <div class="container">
+                        <img class="pp" src="..\assets\image\Account_pp\{{.Profile_Picture}}" />
+                    </div>
 
                 </div>
                 <div class="less-essential">
