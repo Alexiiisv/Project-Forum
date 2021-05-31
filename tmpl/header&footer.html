@@ -24,6 +24,7 @@
                 </div>
                 {{if .Connected}}
                 <div class="info">
+                    <img src="../assets/image/Account_pp/PeepoStare.png">
                     <a id="Info" href="information">Info</a>
                 </div>
                 {{else}}
@@ -38,6 +39,16 @@
         <a id="logout" href="logout">logout</a>
     </div>
     <script type="text/javascript" src="../assets/js/header.js"></script>
+    <script>
+        window.onscroll = () => {
+         var navbar = document.getElementsByClassName("header")[0];
+         if (window.scrollY > 1) {
+           navbar.classList.add("u-scrolled");
+         } else {
+           navbar.classList.remove("u-scrolled");
+         }
+       };
+    </script>
 </div>
 {{end}}
 

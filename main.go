@@ -49,6 +49,13 @@ func main() {
 	}
 }
 
+//page account information
+func Info(w http.ResponseWriter, r *http.Request) {
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "account", Logged)
+}
+
 //page index
 func index(w http.ResponseWriter, r *http.Request) {
 	Dataarray.Connected = Logged.Connected
@@ -88,7 +95,6 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 	}
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
-	//fmt.Println(allTopics)
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "topics", allTopics)
@@ -98,7 +104,6 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
-	//fmt.Println(allTopics)
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "CreateTopicInfo", allTopics)
@@ -107,10 +112,8 @@ func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 //page accounts
 func singleTopics(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("State")
-	if state == "SingleTopic" {
-		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
-	} else if state == "PostTopic" {
-		IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
+	IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
+	if state == "PostTopic" {
 		TopicText = r.FormValue("text")
 		SetTopicText("PostTopicText")
 	}
@@ -123,21 +126,12 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "singleTopics", TopicsName)
 }
 
-//page account information
-func Info(w http.ResponseWriter, r *http.Request) {
-	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "account", Logged)
-}
-
 // Display User Informations
 func User_Info(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("state")
 	UUID = r.FormValue("Uuid")
 	Dataarray.Data = readuuid(state)
 	Dataarray.Connected = Logged.Connected
-	fmt.Println(Dataarray)
-	//fmt.Println(r.FormValue("Uuid"))
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "user_account", Dataarray)
@@ -166,7 +160,6 @@ func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	if len(Dataarray.Data) == 1 {
 		Logged.Account = Dataarray.Data[0]
 		Logged.Connected = true
-		fmt.Println(Logged.Account)
 		index(w, r)
 	} else {
 		Login(w, r)
@@ -235,7 +228,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		pp_name = strconv.FormatInt(time.Now().UnixNano(), 10)
-		//fmt.Println(pp_name)
 		f, err := os.Create(fmt.Sprintf("./assets/image/Account_pp/%s%s", pp_name, filepath.Ext(fileHeader.Filename)))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -328,7 +320,7 @@ func GetTopicsData() config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description, Like FROM Topics_Name;`
+	sql_readall := `SELECT Id, Title, Description, Category, Like FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -338,7 +330,7 @@ func GetTopicsData() config.TName {
 
 	var result config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Likes)
 		if TName.Id == IdTopics {
 			result = TName
 			break

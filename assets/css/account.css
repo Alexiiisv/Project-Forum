@@ -9,7 +9,7 @@ body, * {
 
 .page-index {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     display: block;
     background-color: #eee;
     justify-content: center;
@@ -68,7 +68,7 @@ body, * {
 }
 
 .pp {
-    width: 40%;
+    width: 100%;
     display: inline;
     width: 100%;
     object-fit: cover;
@@ -81,8 +81,4 @@ body, * {
     width: 150px;
     min-height: 150px;
     border: dotted;
-}
-
-.pp {
-    
 }
