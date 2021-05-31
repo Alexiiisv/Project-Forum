@@ -254,9 +254,9 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Fprintf(w, "Upload successful")
 	state := "pp"
 	saveUuid(state)
+	Info(w, r)
 }
 
 /*
@@ -415,8 +415,12 @@ func saveUuid(state string) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		toremove := "./assets/image/icon/"
+		toremove += Logged.Account.Profile_Picture
+		os.Remove(toremove)
 		link := pp_name
 		link += ".png"
+		Logged.Account.Profile_Picture = link
 		stmt.Exec(link, Logged.Account.Uuid.String())
 	}
 }
