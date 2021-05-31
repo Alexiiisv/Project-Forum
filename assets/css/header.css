@@ -2,7 +2,7 @@
     background: transparent;
     position: fixed;
     width: 100vw;
-    z-index: 1;
+    z-index: 2;
 }
 .project-forum {
     display: flex;
@@ -72,9 +72,6 @@
     border-radius: 10px;
     min-width: 100px;
 }
-.Index-body {
-
-}
 
 .Index-text {
     font-size: 21px;
@@ -82,15 +79,32 @@
     padding-left: 14px;
 }
 .hide {
-    transform: translate(1463px);
-    width: 50px;
+    transform: translate(calc(75vw + -20%));
+    width: 65px;
     border: black 2px solid;
     border-radius: 5px;
-    z-index: 1;
+    z-index: 2;
 }
 .on {
     display: block;
 }
 .off {
     display: none;
+}
+
+/* .info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    min-height: 150px;
+    border: dotted;
+} */
+
+.info_pp {
+    display: inline;
+    width: 100%;
+    height: 95%;
+    object-fit: cover;
+    margin-top: 5%;
 }

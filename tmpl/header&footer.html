@@ -24,7 +24,7 @@
                 </div>
                 {{if .Connected}}
                 <div class="info">
-                    <a id="Info" href="information">Info</a>
+                    <img id="Info" class="info_pp" src="../assets/image/Account_pp/{{.Account.Profile_Picture}}">
                 </div>
                 {{else}}
                 <div class="login">
@@ -35,9 +35,21 @@
         </div>
     </div>
     <div class="hide">
-        <a id="logout" href="logout">logout</a>
+        <a id="profile" href="information">Profile</a>
+        <a id="settings" href="settings">Settings</a>
+        <a id="logout" href="logout">Logout</a>
     </div>
     <script type="text/javascript" src="../assets/js/header.js"></script>
+    <script>
+        window.onscroll = () => {
+         var navbar = document.getElementsByClassName("header")[0];
+         if (window.scrollY > 1) {
+           navbar.classList.add("u-scrolled");
+         } else {
+           navbar.classList.remove("u-scrolled");
+         }
+       };
+    </script>
 </div>
 {{end}}
 
@@ -73,7 +85,7 @@
             <div class="link">
                 <a href="https://github.com/Alexiiisv/Project-Forum">
                     <div class="github">
-                        <img src="../assets/image/Icon/github.png" width="60" height="60">
+                        <img src="../assets/image/icon/github.png" width="60" height="60">
                     </div>
                 </a>
             </div>
