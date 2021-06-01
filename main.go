@@ -106,6 +106,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 //page accounts
 func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 	allTopics.Name = readtopics()
+	allTopics.Account = Logged.Account
 	allTopics.Connected = Logged.Connected
 	allTopics.Account = Logged.Account
 	t := template.New("topics-template")
@@ -176,7 +177,6 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	Login(w, r)
 }
 
-// TODO: PUSH into UUID Cringe ?
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
