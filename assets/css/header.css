@@ -79,7 +79,7 @@
     padding-left: 14px;
 }
 .hide {
-    transform: translate(calc(75vw + -20%));
+    transform: translate(calc(75vw + 5%));
     width: 65px;
     border: black 2px solid;
     border-radius: 5px;
@@ -92,14 +92,14 @@
     display: none;
 }
 
-/* .info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 150px;
-    min-height: 150px;
-    border: dotted;
-} */
+.info {
+    /* display: flex; */
+    /* align-items: center; */
+    justify-content: right;
+    width: 50px;
+    min-height: 20%;
+    /* border: dotted; */
+}
 
 .info_pp {
     display: inline;
