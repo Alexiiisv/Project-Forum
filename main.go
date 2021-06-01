@@ -97,7 +97,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 	}
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
-	// fmt.Println(allTopics.Name)
+	allTopics.Account = Logged.Account
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "topics", allTopics)
@@ -107,6 +107,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 	allTopics.Name = readtopics()
 	allTopics.Connected = Logged.Connected
+	allTopics.Account = Logged.Account
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "CreateTopicInfo", allTopics)
@@ -311,7 +312,7 @@ func readtopics() []config.TName {
 
 	var result []config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Likes)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Like)
 		result = append(result, TName)
 	}
 	return result
@@ -333,7 +334,7 @@ func GetTopicsData() config.TName {
 
 	var result config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Likes)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Like)
 		if TName.Id == IdTopics {
 			result = TName
 			break
@@ -473,8 +474,7 @@ func GetCategory(r *http.Request) string {
 }
 
 func Like(w http.ResponseWriter, r *http.Request) {
-
-	Likes = r.FormValue("Like")
+	Likes = r.FormValue("Likes")
 	fmt.Println(Likes)
 	t := template.New("like-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))

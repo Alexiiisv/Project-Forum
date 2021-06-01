@@ -46,7 +46,7 @@ type TName struct {
 	Title    string
 	Desc     string
 	Category string
-	Likes    int
+	Like    int
 }
 
 type TContent struct {
