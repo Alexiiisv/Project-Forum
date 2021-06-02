@@ -339,7 +339,7 @@ func readtopics() []config.TName {
 
 	var result []config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Like)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Likes)
 		result = append(result, TName)
 	}
 	return result
@@ -361,7 +361,7 @@ func GetTopicsData() config.TName {
 
 	var result config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Like)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Likes)
 		if TName.Id == IdTopics {
 			result = TName
 			break
