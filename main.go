@@ -22,12 +22,14 @@ var TopicsName config.Topics
 var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var Logged config.LoginYes
-var Name, Password, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Likes, Category string
-var IdTopics int
+var Name, Password, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Likes, Category, pp_name string
+var cookieonce bool
 var CategoryName = []string{"Informatique", "Jeux Video", "Musique", "Design", "Communication", "Animation3D", "NSFW", "Anime", "Manga"}
-var pp_name string
+var IdTopics int
+var request *http.Request
 
 func main() {
+	cookieonce = true
 	fmt.Println("Please connect to\u001b[31m localhost", config.LocalhostPort, "\u001b[0m")
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets")))) // Join Assets Directory to the server
 	http.HandleFunc("/", index)
@@ -60,6 +62,8 @@ func Info(w http.ResponseWriter, r *http.Request) {
 
 //page index
 func index(w http.ResponseWriter, r *http.Request) {
+	request = r
+	autoconnect()
 	t := template.New("index-template")
 	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "index", Logged)
@@ -77,6 +81,8 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 //page accounts
 func ShowAccount(w http.ResponseWriter, r *http.Request) {
+	request = r
+	autoconnect()
 	Dataarray.Data = readuuid("ShowAccount")
 	Dataarray.Connected = Logged.Connected
 	Dataarray.Account = Logged.Account
@@ -87,6 +93,8 @@ func ShowAccount(w http.ResponseWriter, r *http.Request) {
 
 //page accounts
 func AllTopics(w http.ResponseWriter, r *http.Request) {
+	request = r
+	autoconnect()
 	state := r.FormValue("State")
 	if state == "CreateTopicInfo" {
 		SetTopicsName = r.FormValue("Title")
@@ -144,6 +152,8 @@ func User_Info(w http.ResponseWriter, r *http.Request) {
 
 //page login
 func Login(w http.ResponseWriter, r *http.Request) {
+	request = r
+	autoconnect()
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "login", Logged)
@@ -165,16 +175,33 @@ func LoggedOn(w http.ResponseWriter, r *http.Request) {
 	if len(Dataarray.Data) == 1 {
 		Logged.Account = Dataarray.Data[0]
 		Logged.Connected = true
+		cookie(w, "Uuid", Dataarray.Data[0].Uuid.String(), 86400)
 		index(w, r)
 	} else {
 		Login(w, r)
 	}
 }
 
+func cookie(w http.ResponseWriter, name string, value string, age int) {
+	cookie := &http.Cookie{
+		Name:   name,
+		Value:  value,
+		MaxAge: age,
+	}
+	fmt.Println(cookie)
+	http.SetCookie(w, cookie)
+}
+
 func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie(w, "Uuid", getUuid(r), -1)
 	Logged.Account = config.Account{}
 	Logged.Connected = false
 	Login(w, r)
+}
+
+func getUuid(r *http.Request) string {
+	a, _ := r.Cookie("Uuid")
+	return a.Value
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -479,4 +506,39 @@ func Like(w http.ResponseWriter, r *http.Request) {
 	t := template.New("like-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "singleTopics", TopicsName)
+}
+
+// func autoconnect(r *http.Request) {
+// 	fmt.Println("Cookies in API Call:")
+
+// 	tokenCookie, err := r.Cookie("Uuid")
+// 	if err != nil {
+// 		fmt.Println("noos bozo")
+// 	} else {
+// 		UUID = tokenCookie.Value
+// 		var compte = readuuid("user_account")
+// 		Logged.Account = compte[0]
+// 		Logged.Connected = true
+// 		fmt.Println("le compte connécté c'est le suivant\n\n", compte)
+// 	}
+// }
+
+func autoconnect() {
+	if cookieonce {
+		cookieonce = false
+		r := request
+		fmt.Println("Cookies in API Call:")
+
+		tokenCookie, err := r.Cookie("Uuid")
+		if err != nil {
+			fmt.Println("noos bozo")
+		} else {
+			UUID = tokenCookie.Value
+			var compte = readuuid("user_account")
+			Logged.Account = compte[0]
+			Logged.Connected = true
+			fmt.Println("le compte connécté c'est le suivant\n\n", compte)
+		}
+	}
+
 }
