@@ -5,15 +5,53 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/index.css">
+    <link rel="icon" sizes="16x16" href="./assets/image/Account_pp/1622620038295869800.png"> 
     <title>Project Forum</title>
+    
   </head>
-  <body>
-    {{template "header" .}}
-    <div class="page-index">
-      <div class="title">
+  <nav>
+    
+    <body>
+      {{template "header" .}}
+      <div class="page-index">
+        
+        <div class="title">
+          
+        </div>
+     
+  
+   <div class="container mt-4">
+  
+    <div class="card">
+      <div class="rounded-0 card-header bg-dark text-white">
+        <h5 class="font-weight-bold">Réglement DU FORUM ElodieBiscuit </h5>
+      </div>
+      <div class="rounded-0 card-body">
+        <div class="clearfix">
+        <p>En accédant à « ElodieBiscuit » (désigné ici par « nous », « notre », « nos », « ElodieBiscuit »), vous acceptez d’être légalement responsable des conditions suivantes. Si vous n’acceptez pas d’être légalement responsable de toutes les conditions suivantes, veuillez ne pas utiliser et/ou accéder à « ElodieBiscuit ». Nous pouvons modifier ces conditions à n’importe quel moment et nous essaierons de vous informer de ces modifications, bien que nous vous conseillons de vérifier régulièrement cela par vous-même car si vous continuez à participer à « ElodieBiscuit » après que les modifications aient été effectuées, vous acceptez d’être légalement responsable des conditions modifiées et/ou mises à jour<br />
+          <br />
+          Nos forums sont développés par ELODIE SENEL (désignés ici par « ils », « eux », « leur », « logiciel ELODIE SENEL », « www.ELODIE SENEL.com », « ELODIE SENEL Limited », « équipes de ELODIE SENEL ») qui est une solution de création de forums déclarée sous la Licence Publique Générale GNU v2 (désignée ici par « GPL ») et qui peut être téléchargée sur  (en anglais). Le logiciel ELODIE SENEL a pour seul but de faciliter les discussions sur internet, ELODIE SENEL Limited n’est en aucun cas responsable de la conduite et/ou du contenu que nous acceptons et/ou que nous n’acceptons pas. Si vous souhaitez obtenir plus d’informations concernant ELODIE SENEL, nous vous invitons à consulter  (en anglais).<br />
+          <br />
+          Vous acceptez de ne publier aucun contenu à caractère abusif, obscène, vulgaire, diffamatoire, choquant, menaçant, pornographique, etc. qui pourrait transgresser les lois de votre pays, le pays où « ElodieBiscuit » est hébergé, ou encore la loi internationale. Si vous ne respectez pas cela, vous vous exposez à un bannissement immédiat et permanent et nous avertirons votre fournisseur d’accès à internet si nous le jugeons nécessaire. Nous enregistrons l’adresse IP de tous les messages afin d’aider au renforcement de ces conditions. Vous acceptez le fait que « ElodieBiscuit » ait le droit de supprimer, d’éditer, de déplacer ou de verrouiller n’importe quel sujet à n’importe quel moment si nous estimons que cela est nécessaire. En tant qu’utilisateur, vous acceptez que toutes les informations que vous avez spécifiées soient stockées dans notre base de données. Bien que cette information ne sera pas diffusée à une tierce partie sans votre consentement, ni « ElodieBiscuit », ni ELODIE SENEL, ne pourront être tenus comme responsables en cas de tentative de piratage visant à compromettre vos données.
+          
+        </p>
+        <button type="submit" class="btn btn-block btn-success btn-lg" name="agreed" id="agreed" value="J’accepte ces conditions" data-loading-text="Loading...<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-check"></i> J’accepte ces conditions</button>
+        <button type="submit" class="btn btn-block btn-danger btn-lg" name="not_agreed" value="Je refuse ces conditions" data-loading-text="Cancelling...<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-times"></i> Je refuse ces conditions</button>
+                 <input type="hidden" name="change_lang" value="" />
+                 {{template "singleAccount" .}}
+                </div>
+        </div>
       </div>
     </div>
+  
+    <div class="card">
+      <div class="rounded-0 card-header bg-dark text-white">
+  
+      </div>
+      
+    </nav>
     {{template "footer" .}}
-  </body>
-</html>
-{{end}}
+    </body>
+    
+  </html>
+  {{end}}
