@@ -461,11 +461,11 @@ func SetTopicText(state string) {
 	defer db.Close()
 
 	if state == "PostTopicText" {
-		stmt, err := db.Prepare("insert into Topics(Id, Uuid, Text) values(?, ?, ?)")
+		stmt, err := db.Prepare("insert into Topics(Id, Uuid, Text, Written) values(?, ?, ?, ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
-		stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText)
+		stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText, time.Now().Format(time.ANSIC))
 	}
 }
 
@@ -478,11 +478,11 @@ func SetTopicInfo(state string) {
 	defer db.Close()
 
 	if state == "CreateTopicInfo" {
-		stmt, err := db.Prepare("insert into Topics_Name(Title, Description, Category) values(?, ?, ?)")
+		stmt, err := db.Prepare("insert into Topics_Name(Title, Description, Category, Creation_Date, Creator) values(?, ?, ?, ?, ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
-		stmt.Exec(SetTopicsName, SetTopicsDescription, Category)
+		stmt.Exec(SetTopicsName, SetTopicsDescription, Category, time.Now().Format(time.ANSIC), Logged.Account.Uuid.String())
 	}
 }
 
@@ -502,7 +502,7 @@ func GetCategory(r *http.Request) string {
 
 func Like(w http.ResponseWriter, r *http.Request) {
 	Likes = r.FormValue("Likes")
-	fmt.Println(Likes)
+	fmt.Println(Logged.Account.Uuid.String())
 	t := template.New("like-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "singleTopics", TopicsName)

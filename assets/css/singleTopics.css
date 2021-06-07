@@ -107,3 +107,6 @@ body, * {
     min-height: 150px;
     border: dotted;
 }
+.Like-container {
+    text-align: center;
+}

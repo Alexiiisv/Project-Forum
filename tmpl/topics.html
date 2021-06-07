@@ -78,11 +78,10 @@
             <h1>{{.Name.Title}}</h1>
             <h2>{{.Name.Desc}}</h2>
         </div>
-        <div class="couille">
+        <div class="Like-container">
             <form action="/like" method="POST">
-                <input type="submit" value="submit" name="Likes">
-                <input type="submit" value="{{.Name.Like}}" name="Likes">
-            {{.Name.Likes}}
+                <input type="hidden" value="{{.Name.Likes}}" name="Likes">
+                <input type="submit" value="Like">
             </form>
         </div>
         {{if .Account.Connected}}
