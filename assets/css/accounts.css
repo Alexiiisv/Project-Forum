@@ -16,8 +16,23 @@ body, * {
 }
 .title {
     text-align: center;
-    transform: translate(0px, 130px);
-    height: 100px;
+    color: rebeccapurple;
+   
+    background-color: #343a40!important;
+    max-width: 1000px;
+    width: 100%;
+    padding-right: 200px;
+    padding-left: 50px;
+    margin-right: auto;
+    margin-left: auto;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+h1, h2 {
+    margin-top: 0;
+    
+    color: white;
 }
 .allAccount {
     width: 100vw;
@@ -44,4 +59,86 @@ body, * {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+
+.mt-4, .my-4 {
+    margin-top: 1.5rem!important;
+}
+
+.container {
+   
+    max-width: 1000px;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.text-white {
+    color: #fff !important;
+}
+
+.font-weight-bold {
+    font-weight: 700!important;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+}
+
+.h5, h5 {
+    margin-bottom: 2.5rem;
+    font-size: 25px;
+    text-align: center;
+
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-bottom: .5rem;
+    font-weight: 500;
+    
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+
+.bg-dark {
+    background-color: #343a40!important;
+}
+
+
+.card {
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+    position: relative;
+    top: 200px;
+    left: 40px;
+    width: 1000px;
+    width: auto;
+    height:auto
+    
 }
