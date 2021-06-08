@@ -33,24 +33,30 @@ type LoginYes struct {
 }
 
 type TName struct {
-	Id       int
-	Title    string
-	Desc     string
-	Category string
+	Id           int
+	Title        string
+	Desc         string
+	Category     string
 	CreationDate string
-	Creator string
-	Pic bool //to do
-	Like     int
-	Liker    string
-	Disliker    string
-	Liked    int
+	Creator      string
+	Pic          bool
+	Like         int
+	Liker        string
+	Disliker     string
+	Liked        int
 }
 
 type TContent struct {
-	Id   int
-	Uuid string
-	Text string
+	Id      int
+	Uuid    string
+	Text    string
 	Picture string
+}
+
+type UserActions struct {
+	Commentaires []TContent
+	Account      Account
+	Login        LoginYes
 }
 
 //single topics
@@ -70,5 +76,5 @@ type AllTopics struct {
 
 type Erreur struct {
 	Connected bool
-	Miss bool
+	Miss      bool
 }

@@ -18,7 +18,7 @@ body, * {
 .title {
     text-align: center;
     transform: translate(0px, 130px);
-    height: 100px;
+    height: 10%;
     background-color: #343a40!important;
     max-width: 1000px;
     width: 100%;
@@ -102,7 +102,7 @@ h1, h2 {
     margin-top: 1.5rem!important;
 }
 
-.container {
+/* .container {
    
     max-width: 1000px;
     width: 100%;
@@ -110,7 +110,7 @@ h1, h2 {
     padding-left: 15px;
     margin-right: auto;
     margin-left: auto;
-}
+} */
 .text-white {
     color: #fff !important;
 }

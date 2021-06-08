@@ -17,15 +17,15 @@
     {{template "header" .}}
     <div class="page-index">
         <div class="card">
-        <div class="title">
-            <h1>Accounts</h1>
-            <h2>Show all accounts existing on the site</h2>
+            <div class="title">
+                <h1>Accounts</h1>
+                <h2>Show all accounts existing on the site</h2>
+            </div>
+            {{template "singleAccount" .}}
         </div>
-        {{template "singleAccount" .}}
-    </div>
     </div>
 
-</div>
+    </div>
     {{template "footer" .}}
 </body>
 
@@ -99,29 +99,39 @@
 </head>
 
 <body>
-    {{template "header" .}}
-    {{range .Data}}
+    {{template "header" .Login}}
     <div class="page-index">
         <div class="title">
             <h1>Account</h1>
-            <h2>Informations about {{.Name}} account</h2>
+            <h2>Informations about {{.Account.Name}} account</h2>
         </div>
         <div class="Info">
             <div class="account">
                 <div class="essential">
-                    <h3>{{.Name}}</h3>
+                    <h3>{{.Account.Name}}</h3>
                     <div class="container">
-                        <img class="pp" src="..\assets\image\Account_pp\{{.Profile_Picture}}" />
+                        <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
                     </div>
 
                 </div>
                 <div class="less-essential">
-                    <p>{{.Email}}</p>
+                    <p>{{.Account.Email}}</p>
                 </div>
+
+
             </div>
+            <ul>
+                {{range $test, $value := .Commentaires}}
+                {{if lt $test 5}}
+                <div class="less-essential">
+                    <li>{{.Uuid}} : {{index .Text}}</li>
+                </div>
+                {{end}}
+                {{end}}
+            </ul>
         </div>
+
     </div>
-    {{end}}
     {{template "footer" .}}
 </body>
 
