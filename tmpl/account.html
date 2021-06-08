@@ -59,6 +59,7 @@
                         <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
                     </div>
                     <form method="POST" enctype="multipart/form-data" action="/upload_pp">
+                        <input type="hidden" name="path" value="Account_pp">
                         <input type="file" name="AddPP" accept="image/png">
                         <input type="submit">
                     </form>

@@ -8,6 +8,7 @@
                         <p class="AccName">{{.Uuid}}</p>
                         <p class="border"></p>
                         <p class="AccText">{{.Text}}</p>
+                        {{if ne .Picture ""}}<a href="../assets/image/post/{{.Picture}}">Linked pick</a>{{end}} <!-- add a link if the comment come with a picture -->
                     </div>
                 {{end}}
             </div>
@@ -34,10 +35,12 @@
                 <button>
                     <div class="Topics">
                         <input class="category" type="hidden" value="{{.Category}}">
-                        <p>{{.Id}}</p>
-                        <p>{{.Like}}</p>
                         <p>{{.Title}}</p>
                         <p>{{.Desc}}</p>
+                    </div>
+                    <div class="beau">
+                    <p class="Like">Created the : {{.CreationDate}} by <a href="/user_account?state=user&name={{.Creator}}">{{.Creator}}</a></p>
+                    <p class="Like">Like : {{.Like}}</p>
                     </div>
                 </button>
             </form>
@@ -54,7 +57,7 @@
         <div class="allAccount">
             <div class="account">
                 {{range .Data}}
-                <form action="/user_account" method="POST">
+                <form action="/user_account" method="GET">
                     <input type="hidden" value="{{.Uuid}}" name="Uuid">
                     <input type="hidden" value="user_account" name="state">
                     <button>

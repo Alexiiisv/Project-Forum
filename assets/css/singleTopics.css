@@ -62,6 +62,7 @@ body, * {
     width: 85%;
     font-family: monospace;
     font-size: 15px;
+    overflow-wrap: break-word;
 }
 .border {
     border: black 1px solid;
@@ -69,7 +70,7 @@ body, * {
 }
 .inputTopic {
     text-align: center;
-    padding-top: 8%;
+    padding-top: 1%;
     margin-bottom: 3%;
     margin-left: 19%;
     width: 62vw;
@@ -108,5 +109,11 @@ body, * {
     border: dotted;
 }
 .Like-container {
-    text-align: center;
+    padding-top: 7%;
+    margin-left: 22%;
+    display: flex;
+    column-gap: 0.5%;
+}
+.Like {
+    font-size: 18px;
 }

@@ -30,19 +30,19 @@
                 <br>
                 <p>Account Name</p>
                 <p>Account Password</p>
-                {{if not .Connected}}
+                {{if .Miss}}
                 <br>
-                <h4 style="color: red;">Tu n'est pas connecté</h4>
+                <h4 style="color: red;">There where an error with the login information</h4>
                 {{end}}
             </div>
             <div class="form">
                 <div class="name">
-                    <p class="Inname">Name</p>
+                    <p class="Inname">Email</p>
                     <p class="Inname">Password</p>
                     <br>
                 </div>
-                <form action="/connect" method="POST" class="FormBlock">
-                    <input type="text" name="Name" required>
+                <form action="/connect" method="GET" class="FormBlock">
+                    <input type="text" name="Email" required>
                     <input type="password" name="Password" required>
                     <input type="submit" value="Login In" class="FormBlockInput">
                 </form>
@@ -93,7 +93,7 @@
                 <p id="char" class="invalid">A <b>special character (&£$!?%...)</b></p>
             </div>
             <div class="form">
-            <form action="/createAcc" method="POST">
+            <form action="/createAcc" method="GET">
                 <div class="input">
                     <input type="text" placeholder="Name" name="Name"
                 pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" required>

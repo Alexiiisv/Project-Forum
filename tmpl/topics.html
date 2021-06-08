@@ -22,30 +22,46 @@
         </div>
         {{if .Connected}}
         <div class="inputTopic">
-            <form action="/CreateTopicInfo" method="POST">
+            <form action="/CreateTopicInfo" method="GET">
                 <input type="hidden" value="CreateTopicInfo" name="State">
-                <input type="submit">
+                <input type="submit" value="Create a topic" class="TSButton">
             </form>
         </div>
         {{else}}
         <div class="connectinput">you must be connected with an <a href="/login"><b>account</b></a> to be able to write
             a comment</div>
         {{end}}
-        <div class="filter">
-            <select class="selectFilter" id="select" onchange="select();">
-                <option value="All the topics">All the topics</option>
-                <option value="Informatique">Informatique</option>
-                <option value="Jeux Video">Jeux Video</option>
-                <option value="Musique">Musique</option>
-                <option value="Design">Design</option>
-                <option value="Communication">Communication</option>
-                <option value="Animation3D">Animation3D</option>
-                <option value="NSFW">NSFW</option>
-                <option value="Anime">Anime</option>
-                <option value="Manga">Manga</option>
-                <option value="" hidden selected></option>
-            </select>
+        <div class="sort">
+            <div class="filter">
+                <p class="selectFilter">Filter the topics</p>
+                <select class="selectFilter" id="select" onchange="select();">
+                    <option value="All the topics">All the topics</option>
+                    <option value="Info">Info</option>
+                    <option value="Video Games">Video Games</option>
+                    <option value="Music">Music</option>
+                    <option value="Design">Design</option>
+                    <option value="Communication">Communication</option>
+                    <option value="Animation3D">Animation3D</option>
+                    <option value="NSFW">NSFW</option>
+                    <option value="Anime">Anime</option>
+                    <option value="Manga">Manga</option>
+                    <option value="" hidden selected></option>
+                </select>
+            </div>
+            <div class="BySorting">
+                <p class="BySortingText">Filter the topics</p>
+                <div class="ByInput">
+                    <form action="/topics" method="GET">
+                    <input type="submit" value="ByLike" name="ByLikeSub">
+                </form>
+                <form action="/topics" method="GET">
+                    <input type="submit" value="ByCreationDate" name="ByCreationDateSub">
+                </form>
+                </div>
+                
+            </div>
         </div>
+        
         
         {{template "Topics" .}}
     </div>
@@ -78,18 +94,44 @@
             <h1>{{.Name.Title}}</h1>
             <h2>{{.Name.Desc}}</h2>
         </div>
+        {{if .Account.Connected}}
         <div class="Like-container">
-            <form action="/like" method="POST">
-                <input type="hidden" value="{{.Name.Likes}}" name="Likes">
-                <input type="submit" value="Like">
+            <form action="/like" method="GET">
+                <input type="hidden" value="{{.Name.Like}}" name="Likes">
+                <input type="hidden" value="{{.Name.Liker}}" name="Liker">
+                <input type="hidden" value="{{.Name.Disliker}}" name="Disliker">
+                {{if eq .Name.Liked 0}}
+                <input type="submit" value="👍" title="Like" name="BtnStatus">
+                <input type="submit" value="👎" title="Dislike" name="BtnStatus">
+                {{else if eq .Name.Liked 1}}
+                <input type="submit" value="👍" title="Like" name="BtnStatus">
+                {{else}}
+                <input type="submit" value="👎" title="Dislike" name="BtnStatus">
+                {{end}}
+            </form>
+            <strong class="Like">{{.Name.Like}}</strong>
+        </div>
+        <div class="btnpicmsg">
+            <form action="/singleTopics" method="GET">
+                <input type="hidden" value="{{.Name.Id}}" name="IdTopics">
+                <input type="hidden" value="{{.Name.Pic}}" name="StateBool">
+                <input type="hidden" value="SwitchMode" name="State">
+                <input type="submit" value="Click to add picture">
             </form>
         </div>
-        {{if .Account.Connected}}
         <div class="inputTopic">
-            <form action="/singleTopics" method="POST">
+            {{if .Name.Pic}}
+            <form action="/upload_pp"  enctype="multipart/form-data" method="POST">
+            {{else}}
+            <form action="/singleTopics" method="GET">
+            {{end}}
                 <input type="hidden" value="{{.Name.Id}}" name="IdTopics">
                 <input type="hidden" value="PostTopic" name="State">
                 <input type="text" maxlength="480" name="text" class="inputTextCom">
+                {{if .Name.Pic}}
+                <input type="file" name="AddPP" accept="image/png">
+                <input type="hidden" value="post" name="path">
+                {{end}}
                 <input type="submit"  class="inputsubCom">
             </form>
         </div>
@@ -129,16 +171,16 @@
         </div>
         <div class="inputTopic">
             <div class="createTopic">
-                <form action="/topics" method="POST" class="aaya">
+                <form action="/topics" method="GET" class="aaya">
                     <input type="hidden" value="CreateTopicInfo" name="State">
                     <input type="text" name="Title" placeholder="Type Something">
                     <input type="text" name="Description" placeholder="Description">
                     <div class="category">
                         <table>
                             <tr>
-                                <td><input type="checkbox" value="true" name="Informatique">Informatique</td>
-                                <td><input type="checkbox" value="true" name="Jeux Video">Jeux Video</td>
-                                <td><input type="checkbox" value="true" name="Musique">Musique</td>
+                                <td><input type="checkbox" value="true" name="Info">Info</td>
+                                <td><input type="checkbox" value="true" name="Video Games">Video Games</td>
+                                <td><input type="checkbox" value="true" name="Music">Music</td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" value="true" name="Design">Design</td>

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"text/template"
 	"time"
@@ -16,16 +17,17 @@ import (
 )
 
 var Data config.Account
+
 var TName config.TName
 var TContent config.TContent
 var TopicsName config.Topics
 var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var Logged config.LoginYes
-var Name, Password, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Likes, Category, pp_name string
-var cookieonce bool
-var CategoryName = []string{"Informatique", "Jeux Video", "Musique", "Design", "Communication", "Animation3D", "NSFW", "Anime", "Manga"}
-var IdTopics int
+var state, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name string
+var cookieonce, stateSingleTopics, yoloo bool
+
+var IdTopics, Likes int
 var request *http.Request
 
 func main() {
@@ -45,7 +47,6 @@ func main() {
 	http.HandleFunc("/user_account", User_Info)
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
 	http.HandleFunc("/like", Like)
-	// http.HandleFunc("/Like", Like)
 	http.HandleFunc("/upload_pp", uploadHandler)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
@@ -64,16 +65,16 @@ func Info(w http.ResponseWriter, r *http.Request) {
 func index(w http.ResponseWriter, r *http.Request) {
 	request = r
 	autoconnect()
-	t := template.New("index-template")
-	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "index", Logged)
+		t := template.New("index-template")
+		t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
+		t.ExecuteTemplate(w, "index", Logged)
 }
 
 //create account
 func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	NameChoosen := r.FormValue("Name")
 	Password := r.FormValue("Password")
-	Email := r.FormValue("Email")
+	Email = r.FormValue("Email")
 	Dataarray.Data = append(Dataarray.Data, config.Account{Name: NameChoosen, Password: Password, Email: Email, Uuid: config.GetUUID()})
 	saveUuid("accounts")
 	ShowAccount(w, r)
@@ -99,11 +100,25 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 	if state == "CreateTopicInfo" {
 		SetTopicsName = r.FormValue("Title")
 		SetTopicsDescription = r.FormValue("Description")
-		// fmt.Println("Name : ", SetTopicsName, " Description : ", SetTopicsDescription)
-		Category = GetCategory(r)
-		SetTopicInfo(state)
+		Category = config.GetCategory(r)
+		config.SetTopicInfo(state, SetTopicsName, SetTopicsDescription, Category, Logged.Account.Uuid.String())
 	}
 	allTopics.Name = readtopics()
+	fmt.Println(allTopics.Name)
+	if r.FormValue("ByLikeSub") == "ByLike" {
+		fmt.Println("a")
+		sort.SliceStable(allTopics.Name, func(i, j int) bool { return allTopics.Name[i].Like > allTopics.Name[j].Like })
+		fmt.Println(allTopics.Name)
+	}
+	if r.FormValue("ByCreationDateSub")== "ByCreationDate" {
+		sort.SliceStable(allTopics.Name, func(i, j int) bool { 
+			st, _ := time.Parse(time.ANSIC, allTopics.Name[i].CreationDate)
+			nd, _ := time.Parse(time.ANSIC, allTopics.Name[j].CreationDate)
+			fmt.Println(st, nd)
+			return nd.Before(st) })
+		fmt.Println(allTopics.Name)
+	}
+
 	allTopics.Connected = Logged.Connected
 	allTopics.Account = Logged.Account
 	t := template.New("topics-template")
@@ -126,14 +141,20 @@ func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 func singleTopics(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("State")
 	IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
-	if state == "PostTopic" {
+	stateSingleTopics, _ = strconv.ParseBool(r.FormValue("StateBool"))
+	if state == "PostTopic" && yoloo{
 		TopicText = r.FormValue("text")
-		SetTopicText("PostTopicText")
+		config.SetTopicText("PostTopic", IdTopics, Logged.Account.Uuid.String(), TopicText, "")
 	}
+	yoloo = true
 	TopicsName.Name = GetTopicsData()
+	TopicsName.Name.Liked = config.SetLikerint(TopicsName.Name.Liker, TopicsName.Name.Disliker, UUID)
 	TopicsName.Account = Logged
 	TopicsName.Content = GetTopicsContent()
 	TopicsName.Accounts = readuuid("ShowAccount")
+	if state == "SwitchMode" {
+		TopicsName.Name.Pic = !TopicsName.Name.Pic
+	}
 	t := template.New("singleTopics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "singleTopics", TopicsName)
@@ -142,9 +163,14 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 // Display User Informations
 func User_Info(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("state")
-	UUID = r.FormValue("Uuid")
-	Dataarray.Data = readuuid(state)
-	Dataarray.Connected = Logged.Connected
+	if state == "user" {
+		Name = r.FormValue("name")
+		Dataarray.Data = readuuid(state)
+	}else {
+		UUID = r.FormValue("Uuid")
+		Dataarray.Data = readuuid(state)
+		Dataarray.Connected = Logged.Connected
+	}
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "user_account", Dataarray)
@@ -156,7 +182,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	autoconnect()
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "login", Logged)
+	if state == "login" {
+		t.ExecuteTemplate(w, "login", config.Erreur{Connected: false, Miss: true})
+		state = ""
+	} else {
+
+		t.ExecuteTemplate(w, "login", config.Erreur{Connected: false, Miss: false})
+	}
 }
 
 //page register
@@ -169,15 +201,17 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 // Connection to account
 func LoggedOn(w http.ResponseWriter, r *http.Request) {
-	Name = r.FormValue("Name")
+	Email = r.FormValue("Email")
 	Password = r.FormValue("Password")
 	Dataarray.Data = readuuid("LoggedOn")
 	if len(Dataarray.Data) == 1 {
 		Logged.Account = Dataarray.Data[0]
 		Logged.Connected = true
+		UUID = Dataarray.Data[0].Uuid.String()
 		cookie(w, "Uuid", Dataarray.Data[0].Uuid.String(), 86400)
 		index(w, r)
 	} else {
+		state = "login"
 		Login(w, r)
 	}
 }
@@ -241,7 +275,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		filetype := http.DetectContentType(buff)
-		if filetype != "image/jpeg" && filetype != "image/png" {
+		if filetype != "image/png" {
 			http.Error(w, "The provided file format is not allowed. Please upload a JPEG or PNG image", http.StatusBadRequest)
 			return
 		}
@@ -251,15 +285,15 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		err = os.MkdirAll("./assets/image/Account_pp", os.ModePerm)
+		var path = "./assets/image/" + r.FormValue("path")
+		err = os.MkdirAll(path, os.ModePerm)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		pp_name = strconv.FormatInt(time.Now().UnixNano(), 10)
-		f, err := os.Create(fmt.Sprintf("./assets/image/Account_pp/%s%s", pp_name, filepath.Ext(fileHeader.Filename)))
+		f, err := os.Create(fmt.Sprintf("./assets/image/%s/%s%s", r.FormValue("path"), pp_name, filepath.Ext(fileHeader.Filename)))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -278,19 +312,20 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	state := "pp"
-	saveUuid(state)
-	Info(w, r)
+	if r.FormValue("State") == "PostTopic" {
+		var id, _ = strconv.Atoi(r.FormValue("IdTopics"))
+		config.SetTopicText("PostTopic", id, Logged.Account.Uuid.String(), r.FormValue("text"), pp_name + ".png")
+		state = ""
+		yoloo = false
+		singleTopics(w, r)
+	} else {
+		state := "pp"
+		saveUuid(state)
+		Info(w, r)
+	}
+	
+	
 }
-
-/*
-// //get the length of a table
-func GetCount(schemadottablename string, db *sql.DB) int {
-	var cnt int
-	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
-	return cnt
-}
-*/
 
 //read database/store value from database to go code
 func readuuid(state string) []config.Account {
@@ -309,13 +344,16 @@ func readuuid(state string) []config.Account {
 	var result []config.Account
 	for rows.Next() {
 		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid, &Data.Profile_Picture)
-		if state == "LoggedOn" && config.CheckPasswordHash(Password, Data.Password) && Data.Name == Name {
+		if state == "LoggedOn" && config.CheckPasswordHash(Password, Data.Password) && Data.Email == Email {
 			Data.Password = Password
 			result = append(result, Data)
 			break
 		} else if state == "ShowAccount" {
 			result = append(result, Data)
 		} else if state == "user_account" && UUID == Data.Uuid.String() {
+			result = append(result, Data)
+			break
+		} else if state == "user" && Name == Data.Name {
 			result = append(result, Data)
 			break
 		}
@@ -329,7 +367,7 @@ func readtopics() []config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description, Category, Like FROM Topics_Name;`
+	sql_readall := `SELECT Id, Title, Description, Creation_Date, Category, Like, Creator FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -339,7 +377,8 @@ func readtopics() []config.TName {
 
 	var result []config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Likes)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.CreationDate, &TName.Category, &TName.Like, &TName.Creator)
+		TName.Creator = config.GetName(TName.Creator)
 		result = append(result, TName)
 	}
 	return result
@@ -351,7 +390,7 @@ func GetTopicsData() config.TName {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Title, Description, Category, Like FROM Topics_Name;`
+	sql_readall := `SELECT Id, Title, Description, Category, Like, Liker, Disliker, Creator FROM Topics_Name;`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -361,8 +400,10 @@ func GetTopicsData() config.TName {
 
 	var result config.TName
 	for rows.Next() {
-		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Likes)
+		rows.Scan(&TName.Id, &TName.Title, &TName.Desc, &TName.Category, &TName.Like, &TName.Liker, &TName.Disliker, &TName.Creator)
 		if TName.Id == IdTopics {
+			TName.Pic = stateSingleTopics
+			TName.Liked = 0
 			result = TName
 			break
 		}
@@ -370,22 +411,13 @@ func GetTopicsData() config.TName {
 	return result
 }
 
-/*
-// //get the length of a table
-func GetCount(schemadottablename string, db *sql.DB) int {
-	var cnt int
-	_ = db.QueryRow(`select count(*) from ` + schemadottablename).Scan(&cnt)
-	return cnt
-}
-*/
-
 //read database/store value from database to go code
 func GetTopicsContent() []config.TContent {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Uuid, Text FROM Topics`
+	sql_readall := `SELECT Id, Uuid, Text, Picture FROM Topics`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -396,7 +428,7 @@ func GetTopicsContent() []config.TContent {
 	var result []config.TContent
 	Compte := readuuid("ShowAccount")
 	for rows.Next() {
-		rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text)
+		rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Picture)
 		for i := 0; i < len(Compte); i++ {
 			if TContent.Uuid == Compte[i].Uuid.String() {
 				TContent.Uuid = Compte[i].Name
@@ -425,11 +457,13 @@ func saveUuid(state string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		for index := range Dataarray.Data {
-			if config.UserExists(db, Dataarray.Data[index].Uuid.String()) {
-				continue
+		if !config.EmailExists(db, Email) {
+			for index := range Dataarray.Data {
+				if config.UserExists(db, Dataarray.Data[index].Uuid.String()) {
+					continue
+				}
+				stmt.Exec(Dataarray.Data[index].Name, string(config.HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String(), "Standard_Pic.png")
 			}
-			stmt.Exec(Dataarray.Data[index].Name, string(config.HashPassword(Dataarray.Data[len(Dataarray.Data)-1].Password)), Dataarray.Data[index].Email, Dataarray.Data[index].Uuid.String(), "Standard_Pic.png")
 		}
 	} else if state == "pp" {
 		if err != nil {
@@ -452,76 +486,24 @@ func saveUuid(state string) {
 	}
 }
 
-//Set in a database the text written in a topic
-func SetTopicText(state string) {
-	db, err := sql.Open("sqlite3", "./Database/Topics.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	if state == "PostTopicText" {
-		stmt, err := db.Prepare("insert into Topics(Id, Uuid, Text, Written) values(?, ?, ?, ?)")
-		if err != nil {
-			log.Fatal(err)
-		}
-		stmt.Exec(IdTopics, Logged.Account.Uuid.String(), TopicText, time.Now().Format(time.ANSIC))
-	}
-}
-
-//Set in a database the information about a topic
-func SetTopicInfo(state string) {
-	db, err := sql.Open("sqlite3", "./Database/Topics.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	if state == "CreateTopicInfo" {
-		stmt, err := db.Prepare("insert into Topics_Name(Title, Description, Category, Creation_Date, Creator) values(?, ?, ?, ?, ?)")
-		if err != nil {
-			log.Fatal(err)
-		}
-		stmt.Exec(SetTopicsName, SetTopicsDescription, Category, time.Now().Format(time.ANSIC), Logged.Account.Uuid.String())
-	}
-}
-
-//
-func GetCategory(r *http.Request) string {
-	var result = ""
-	for _, v := range CategoryName {
-		a := r.FormValue(v)
-		b, _ := strconv.ParseBool(a)
-		if b {
-			result += v
-			result += ","
-		}
-	}
-	return result[:len(result)-1]
-}
-
 func Like(w http.ResponseWriter, r *http.Request) {
-	Likes = r.FormValue("Likes")
-	fmt.Println(Logged.Account.Uuid.String())
+	Likes, _ = strconv.Atoi(r.FormValue("Likes"))
+	BtnStatus := r.FormValue("BtnStatus")
+	fmt.Println(BtnStatus)
+	if BtnStatus == "👎" {
+		fmt.Println("a")
+		Disliker := r.FormValue("Disliker")
+		config.SetDisliker(IdTopics, UUID, Likes, Disliker)
+	}else if BtnStatus == "👍" {
+		Liker := r.FormValue("Liker")
+		config.SetLiker(IdTopics, UUID, Likes, Liker)
+	}
+	TopicsName.Name = GetTopicsData()
+	TopicsName.Name.Liked = config.SetLikerint(TopicsName.Name.Liker, TopicsName.Name.Disliker, UUID)
 	t := template.New("like-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "singleTopics", TopicsName)
 }
-
-// func autoconnect(r *http.Request) {
-// 	fmt.Println("Cookies in API Call:")
-
-// 	tokenCookie, err := r.Cookie("Uuid")
-// 	if err != nil {
-// 		fmt.Println("noos bozo")
-// 	} else {
-// 		UUID = tokenCookie.Value
-// 		var compte = readuuid("user_account")
-// 		Logged.Account = compte[0]
-// 		Logged.Connected = true
-// 		fmt.Println("le compte connécté c'est le suivant\n\n", compte)
-// 	}
-// }
 
 func autoconnect() {
 	if cookieonce {
