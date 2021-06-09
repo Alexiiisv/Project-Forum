@@ -185,7 +185,7 @@ func User_Info(w http.ResponseWriter, r *http.Request) {
 	}
 	UserActions.Account = readuuid(state)[0]
 	UserActions.Commentaires = GetTopicsContent()
-	fmt.Println(UserActions.Account.Role)
+	// fmt.Println(UserActions.Account.Role)
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "user_account", UserActions)
