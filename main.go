@@ -70,7 +70,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	autoconnect()
 	t := template.New("index-template")
 	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "index", Logged)
+	t.ExecuteTemplate(w, "index.html", Logged)
 }
 
 //create account
