@@ -10,11 +10,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../assets/css/accounts.css">
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
     <title>Project Forum</title>
 </head>
 
 <body>
-    {{template "header" .}}
+    {{template "header" .Account}}
     <div class="page-index">
         <div class="card">
         <div class="title">
@@ -45,6 +46,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
     <script type="text/javascript" src="../assets/js/AccountPict.js"></script>
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
     <title>Project Forum</title>
 </head>
 
@@ -62,15 +64,16 @@
                     <div class="container">
                         <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
                     </div>
-                    <form method="POST" enctype="multipart/form-data" action="/upload_pp">
+                    <form method="POST" enctype="multipart/form-data" action="/upload_pp" class="inputPP">
                         <input type="hidden" name="path" value="Account_pp">
                         <input type="file" name="AddPP" accept="image/png">
                         <input type="submit">
                     </form>
                 </div>
                 <div class="less-essential">
-                    <p>{{.Account.Email}}</p>
-                    <p>{{.Account.Uuid}}</p>
+                    <br><p>Email : {{.Account.Email}}</p><br>
+                    <p>Uuid : {{.Account.Uuid}}</p><br>
+                    <p>Role : {{.Account.Role}}</p><br>
                 </div>
             </div>
         </div>
@@ -94,32 +97,99 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
-    <!-- <script src="../assets/js/profile_picture.js"></script> -->
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
     <title>Project Forum</title>
 </head>
 
 <body>
-    {{template "header" .}}
+    {{template "header" .Account}}
+    {{$Role := .Account.Account.Role}}
+    {{$Uuid := .Account.Account.Uuid}}
     {{range .Data}}
     <div class="page-index">
         <div class="title">
             <h1>Account</h1>
             <h2>Informations about {{.Name}} account</h2>
         </div>
+        {{if (and (and (ne $Uuid .Uuid) (eq $Role "Admin")) (ne .Role "Admin"))}}
+            <div class="SettingAd">
+                <a href="/user_account_settings">coucou</a>
+            </div>
+        {{end}}
         <div class="Info">
             <div class="account">
                 <div class="essential">
-                    <h3>{{.Name}}</h3>
+                    <h3 class="testttt">{{.Name}}</h3>
                     <div class="container">
                         <img class="pp" src="..\assets\image\Account_pp\{{.Profile_Picture}}" />
                     </div>
 
                 </div>
                 <div class="less-essential">
-                    <p>{{.Email}}</p>
+                    <br><p>Email : {{.Email}}</p><br>
+                    <p>Role : {{.Role}}</p><br>
                 </div>
+                
             </div>
         </div>
+    </div>
+    {{end}}
+    {{template "footer" .}}
+</body>
+
+</html>
+{{end}}
+
+<!--
+    Template for a user account
+-->
+{{define "user_account_settings"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/account.css">
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
+    <title>Project Forum</title>
+</head>
+
+<body>
+    {{template "header" .Account}}
+    {{range .Data}}
+    <div class="page-index">
+        <div class="title">
+            <h1>Account</h1>
+            <h2>Informations about {{.Name}} account</h2>
+        </div>
+        <form action="/updaccount" method="POST">
+            <input type="hidden" name="state" value="updcompte">
+            <input type="hidden" name="Uuid" value="{{.Uuid}}">
+        <div class="Info">
+            <div class="account">
+                <div class="essential">
+                    <input value="{{.Name}}" name="Name">
+                    <div class="container">
+                        <img class="pp" src="..\assets\image\Account_pp\{{.Profile_Picture}}" />
+                    </div>
+
+                </div>
+                <div class="less-essential">
+                    <br><p>Email : {{.Email}}</p><br>
+                    <select name="Role">
+                        <option value="Admin">Admin</option>
+                        <option value="Moderator">Moderator</option>
+                        <option value="User" selected>User</option>
+                    </select>
+                    <br><p>Role : {{.Role}}</p><br>
+                </div>
+                
+            </div>
+        </div>
+        <input type="submit">
+    </form>
     </div>
     {{end}}
     {{template "footer" .}}

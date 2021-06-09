@@ -19,12 +19,12 @@ type Account struct {
 	Email           string
 	Uuid            uuid.UUID
 	Profile_Picture string
+	Role			string
 }
 
 type AllAccount struct {
-	Connected bool
 	Data      []Account
-	Account   Account
+	Account   LoginYes
 }
 
 type LoginYes struct {
@@ -33,23 +33,23 @@ type LoginYes struct {
 }
 
 type TName struct {
-	Id       int
-	Title    string
-	Desc     string
-	Category string
+	Id           int
+	Title        string
+	Desc         string
+	Category     string
 	CreationDate string
-	Creator string
-	Pic bool //to do
-	Like     int
-	Liker    string
-	Disliker    string
-	Liked    int
+	Creator      string
+	Pic          bool
+	Like         int
+	Liker        string
+	Disliker     string
+	Liked        int
 }
 
 type TContent struct {
-	Id   int
-	Uuid string
-	Text string
+	Id      int
+	Uuid    string
+	Text    string
 	Picture string
 }
 
@@ -70,5 +70,5 @@ type AllTopics struct {
 
 type Erreur struct {
 	Connected bool
-	Miss bool
+	Miss      bool
 }

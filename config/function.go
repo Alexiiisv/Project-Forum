@@ -208,7 +208,7 @@ func SetLikerint(Liker string, Disliker string, UUID string) int {
 }
 
 //read database/store value from database to go code
-func GetName(UUID string, ) string {
+func GetName(UUID string) string {
 	db, err := sql.Open("sqlite3", "./Database/User.db")
 	if err != nil {
 		log.Fatal(err)
@@ -229,4 +229,18 @@ func GetName(UUID string, ) string {
 		}
 	}
 	return ""
+}
+
+//set the number of like in a topic 
+func UpdateAccount(UUID string, Name string, Role string) {
+	db, err := sql.Open("sqlite3", "./Database/User.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	stmt, err := db.Prepare("update Accounts set Name = ?, Role = ? where Uuid = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	stmt.Exec(Name, Role, UUID)
 }

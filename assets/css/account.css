@@ -18,7 +18,7 @@ body, * {
 .title {
     text-align: center;
     transform: translate(0px, 130px);
-    height: 100px;
+    height: 10%;
     background-color: #343a40!important;
     max-width: 1000px;
     width: 100%;
@@ -34,7 +34,7 @@ body, * {
 h1, h2 {
     margin-top: 0;
     
-    color: white;
+    color: black;
 }
 
 .Info {
@@ -43,10 +43,11 @@ h1, h2 {
     justify-content: center;
     align-items: center;
     background-color: #eee;
+    align-content: flex-start;
 }
 
 .less-essential {
-    width: 350px;
+    width: 40%;
     margin: 20px 20px 20px 20px;
     border: solid 2px black;
     border-radius: 10px;
@@ -61,35 +62,46 @@ h1, h2 {
 
 .essential {
     margin: 150px 0px 120px 0px;
-    width: auto;
+    min-width: 25%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     align-items: center;
     row-gap: 50px;
 }
-
+.SettingAd{
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 10%;
+    padding-left: 60%;
+}
 .account {
     display: flex;
-    margin-top: 10%;
     align-items: center;
     justify-content: space-between;
-    column-gap: 200px;
+    min-width: 50%;
 }
 
 .AccountImg {
     border-radius: 50%;
     clip-path: ellipse(50% 50%);
 }
-
+.inputPP {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
 
 .container {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 150px;
-    min-height: 150px;
+    width: 37%;
+    min-height: 37%;
     border: dotted;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .pp {
@@ -101,16 +113,6 @@ h1, h2 {
 .mt-4, .my-4 {
     margin-top: 1.5rem!important;
 }
-
-.container {
-   
-    max-width: 1000px;
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-}
 .text-white {
     color: #fff !important;
 }
@@ -118,7 +120,7 @@ h1, h2 {
 .font-weight-bold {
     font-weight: 700!important;
 }
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6{
     font-weight: 300;
 }
 
@@ -135,7 +137,7 @@ h1, h2, h3, h4, h5, h6 {
     
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6 :not(testttt) {
     margin-top: 0;
     margin-bottom: 1.5rem;
     color: white;

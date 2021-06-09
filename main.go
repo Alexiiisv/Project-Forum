@@ -24,7 +24,7 @@ var TopicsName config.Topics
 var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var Logged config.LoginYes
-var state, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name string
+var state, Role, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name string
 var cookieonce, stateSingleTopics, yoloo bool
 
 var IdTopics, Likes int
@@ -45,10 +45,12 @@ func main() {
 	http.HandleFunc("/topics", AllTopics)
 	http.HandleFunc("/singleTopics", singleTopics)
 	http.HandleFunc("/user_account", User_Info)
+	http.HandleFunc("/updaccount", updaccount)
+	http.HandleFunc("/user_account_settings", User_Info_set)
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
 	http.HandleFunc("/like", Like)
 	http.HandleFunc("/upload_pp", uploadHandler)
-	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
+	err := http.ListenAndServeTLS("project-forum.pages.dev", "server.crt", "server.key", nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
@@ -65,9 +67,9 @@ func Info(w http.ResponseWriter, r *http.Request) {
 func index(w http.ResponseWriter, r *http.Request) {
 	request = r
 	autoconnect()
-		t := template.New("index-template")
-		t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
-		t.ExecuteTemplate(w, "index", Logged)
+	t := template.New("index-template")
+	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "index", Logged)
 }
 
 //create account
@@ -80,13 +82,22 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	ShowAccount(w, r)
 }
 
+//create account
+func updaccount(w http.ResponseWriter, r *http.Request) {
+	NameUpdated := r.FormValue("Name")
+	UUID = r.FormValue("Uuid")
+	Role = r.FormValue("Role")
+	fmt.Println(NameUpdated, Role, UUID)
+	config.UpdateAccount(UUID, NameUpdated, Role)
+	ShowAccount(w, r)
+}
+
 //page accounts
 func ShowAccount(w http.ResponseWriter, r *http.Request) {
 	request = r
 	autoconnect()
 	Dataarray.Data = readuuid("ShowAccount")
-	Dataarray.Connected = Logged.Connected
-	Dataarray.Account = Logged.Account
+	Dataarray.Account = Logged
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "accounts", Dataarray)
@@ -110,12 +121,13 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 		sort.SliceStable(allTopics.Name, func(i, j int) bool { return allTopics.Name[i].Like > allTopics.Name[j].Like })
 		fmt.Println(allTopics.Name)
 	}
-	if r.FormValue("ByCreationDateSub")== "ByCreationDate" {
-		sort.SliceStable(allTopics.Name, func(i, j int) bool { 
+	if r.FormValue("ByCreationDateSub") == "ByCreationDate" {
+		sort.SliceStable(allTopics.Name, func(i, j int) bool {
 			st, _ := time.Parse(time.ANSIC, allTopics.Name[i].CreationDate)
 			nd, _ := time.Parse(time.ANSIC, allTopics.Name[j].CreationDate)
 			fmt.Println(st, nd)
-			return nd.Before(st) })
+			return nd.Before(st)
+		})
 		fmt.Println(allTopics.Name)
 	}
 
@@ -142,7 +154,7 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("State")
 	IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
 	stateSingleTopics, _ = strconv.ParseBool(r.FormValue("StateBool"))
-	if state == "PostTopic" && yoloo{
+	if state == "PostTopic" && yoloo {
 		TopicText = r.FormValue("text")
 		config.SetTopicText("PostTopic", IdTopics, Logged.Account.Uuid.String(), TopicText, "")
 	}
@@ -166,14 +178,21 @@ func User_Info(w http.ResponseWriter, r *http.Request) {
 	if state == "user" {
 		Name = r.FormValue("name")
 		Dataarray.Data = readuuid(state)
-	}else {
+	} else {
 		UUID = r.FormValue("Uuid")
 		Dataarray.Data = readuuid(state)
-		Dataarray.Connected = Logged.Connected
+		Dataarray.Account = Logged
 	}
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "user_account", Dataarray)
+}
+
+// Display User Informations
+func User_Info_set(w http.ResponseWriter, r *http.Request) {
+	t := template.New("account-template")
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "user_account_settings", Dataarray)
 }
 
 //page login
@@ -193,7 +212,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 //page register
 func Register(w http.ResponseWriter, r *http.Request) {
-	Dataarray.Connected = Logged.Connected
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/login&register.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "register", Dataarray)
@@ -314,7 +332,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.FormValue("State") == "PostTopic" {
 		var id, _ = strconv.Atoi(r.FormValue("IdTopics"))
-		config.SetTopicText("PostTopic", id, Logged.Account.Uuid.String(), r.FormValue("text"), pp_name + ".png")
+		config.SetTopicText("PostTopic", id, Logged.Account.Uuid.String(), r.FormValue("text"), pp_name+".png")
 		state = ""
 		yoloo = false
 		singleTopics(w, r)
@@ -323,8 +341,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		saveUuid(state)
 		Info(w, r)
 	}
-	
-	
+
 }
 
 //read database/store value from database to go code
@@ -333,7 +350,7 @@ func readuuid(state string) []config.Account {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Name, Password, Email, Uuid, Profile_Picture FROM Accounts`
+	sql_readall := `SELECT Name, Password, Email, Uuid, Profile_Picture, Role FROM Accounts`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -343,7 +360,7 @@ func readuuid(state string) []config.Account {
 
 	var result []config.Account
 	for rows.Next() {
-		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid, &Data.Profile_Picture)
+		rows.Scan(&Data.Name, &Data.Password, &Data.Email, &Data.Uuid, &Data.Profile_Picture, &Data.Role)
 		if state == "LoggedOn" && config.CheckPasswordHash(Password, Data.Password) && Data.Email == Email {
 			Data.Password = Password
 			result = append(result, Data)
@@ -494,7 +511,7 @@ func Like(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("a")
 		Disliker := r.FormValue("Disliker")
 		config.SetDisliker(IdTopics, UUID, Likes, Disliker)
-	}else if BtnStatus == "👍" {
+	} else if BtnStatus == "👍" {
 		Liker := r.FormValue("Liker")
 		config.SetLiker(IdTopics, UUID, Likes, Liker)
 	}
