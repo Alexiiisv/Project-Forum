@@ -18,15 +18,15 @@
     {{template "header" .Account}}
     <div class="page-index">
         <div class="card">
-        <div class="title">
-            <h1>Accounts</h1>
-            <h2>Show all accounts existing on the site</h2>
+            <div class="title">
+                <h1>Accounts</h1>
+                <h2>Show all accounts existing on the site</h2>
+            </div>
+            {{template "singleAccount" .}}
         </div>
-        {{template "singleAccount" .}}
-    </div>
     </div>
 
-</div>
+    </div>
     {{template "footer" .}}
 </body>
 
@@ -102,16 +102,15 @@
 </head>
 
 <body>
-    {{template "header" .Account}}
-    {{$Role := .Account.Account.Role}}
-    {{$Uuid := .Account.Account.Uuid}}
-    {{range .Data}}
+    {{template "header" .Login}}
+    {{$Role := .Login.Account.Role}}
+    {{$Uuid := .Login.Account.Uuid}}
     <div class="page-index">
         <div class="title">
             <h1>Account</h1>
-            <h2>Informations about {{.Name}} account</h2>
+            <h2>Informations about {{.Account.Name}} account</h2>
         </div>
-        {{if (and (and (ne $Uuid .Uuid) (eq $Role "Admin")) (ne .Role "Admin"))}}
+        {{if (and (and (ne $Uuid .Account.Uuid) (eq $Role "Admin")) (ne .Account.Role "Admin"))}}
             <div class="SettingAd">
                 <a href="/user_account_settings">coucou</a>
             </div>
@@ -119,21 +118,20 @@
         <div class="Info">
             <div class="account">
                 <div class="essential">
-                    <h3 class="testttt">{{.Name}}</h3>
+                    <h3 class="testttt">{{.Account.Name}}</h3>
                     <div class="container">
-                        <img class="pp" src="..\assets\image\Account_pp\{{.Profile_Picture}}" />
+                        <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
                     </div>
 
                 </div>
                 <div class="less-essential">
-                    <br><p>Email : {{.Email}}</p><br>
-                    <p>Role : {{.Role}}</p><br>
+                    <br><p>Email : {{.Account.Email}}</p><br>
+                    <p>Role : {{.Account.Role}}</p><br>
                 </div>
                 
             </div>
         </div>
     </div>
-    {{end}}
     {{template "footer" .}}
 </body>
 
@@ -157,41 +155,48 @@
 </head>
 
 <body>
-    {{template "header" .Account}}
-    {{range .Data}}
+    {{template "header" .Login}}
     <div class="page-index">
         <div class="title">
             <h1>Account</h1>
-            <h2>Informations about {{.Name}} account</h2>
+            <h2>Informations about {{.Account.Name}} account</h2>
         </div>
         <form action="/updaccount" method="POST">
             <input type="hidden" name="state" value="updcompte">
-            <input type="hidden" name="Uuid" value="{{.Uuid}}">
+            <input type="hidden" name="Uuid" value="{{.Account.Uuid}}">
         <div class="Info">
             <div class="account">
                 <div class="essential">
-                    <input value="{{.Name}}" name="Name">
+                    <input value="{{.Account.Name}}" name="Name">
                     <div class="container">
-                        <img class="pp" src="..\assets\image\Account_pp\{{.Profile_Picture}}" />
+                        <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
                     </div>
 
                 </div>
                 <div class="less-essential">
-                    <br><p>Email : {{.Email}}</p><br>
+                    <br><p>Email : {{.Account.Email}}</p><br>
                     <select name="Role">
                         <option value="Admin">Admin</option>
                         <option value="Moderator">Moderator</option>
                         <option value="User" selected>User</option>
                     </select>
-                    <br><p>Role : {{.Role}}</p><br>
+                    <br><p>Role : {{.Account.Role}}</p><br>
                 </div>
                 
             </div>
+            <ul>
+                {{range $test, $value := .Commentaires}}
+                {{if lt $test 5}}
+                <div class="less-essential">
+                    <li>{{.Uuid}} : {{index .Text}}</li>
+                </div>
+                {{end}}
+                {{end}}
+            </ul>
         </div>
         <input type="submit">
     </form>
     </div>
-    {{end}}
     {{template "footer" .}}
 </body>
 

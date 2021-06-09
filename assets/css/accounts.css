@@ -21,8 +21,8 @@ body, * {
     background-color: #343a40!important;
     max-width: 1000px;
     width: 100%;
-    padding-right: 200px;
-    padding-left: 50px;
+    padding-right: 5%;
+    padding-left: 5%;
     margin-right: auto;
     margin-left: auto;
     background-clip: border-box;

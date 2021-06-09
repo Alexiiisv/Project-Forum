@@ -23,6 +23,7 @@ var TContent config.TContent
 var TopicsName config.Topics
 var Dataarray config.AllAccount
 var allTopics config.AllTopics
+var UserActions config.UserActions
 var Logged config.LoginYes
 var state, Role, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name string
 var cookieonce, stateSingleTopics, yoloo bool
@@ -50,7 +51,7 @@ func main() {
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
 	http.HandleFunc("/like", Like)
 	http.HandleFunc("/upload_pp", uploadHandler)
-	err := http.ListenAndServeTLS("project-forum.pages.dev", "server.crt", "server.key", nil) // Set listen port
+	err := http.ListenAndServeTLS(config.LocalhostPort, "server.crt", "server.key", nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
@@ -174,25 +175,27 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 
 // Display User Informations
 func User_Info(w http.ResponseWriter, r *http.Request) {
-	state := r.FormValue("state")
+	state = r.FormValue("state")
+
 	if state == "user" {
 		Name = r.FormValue("name")
-		Dataarray.Data = readuuid(state)
 	} else {
 		UUID = r.FormValue("Uuid")
-		Dataarray.Data = readuuid(state)
-		Dataarray.Account = Logged
+		UserActions.Login = Logged
 	}
+	UserActions.Account = readuuid(state)[0]
+	UserActions.Commentaires = GetTopicsContent()
+	fmt.Println(UserActions.Account.Role)
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "user_account", Dataarray)
+	t.ExecuteTemplate(w, "user_account", UserActions)
 }
 
 // Display User Informations
 func User_Info_set(w http.ResponseWriter, r *http.Request) {
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "user_account_settings", Dataarray)
+	t.ExecuteTemplate(w, "user_account_settings", UserActions)
 }
 
 //page login
@@ -445,17 +448,26 @@ func GetTopicsContent() []config.TContent {
 	var result []config.TContent
 	Compte := readuuid("ShowAccount")
 	for rows.Next() {
-		rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Picture)
-		for i := 0; i < len(Compte); i++ {
-			if TContent.Uuid == Compte[i].Uuid.String() {
-				TContent.Uuid = Compte[i].Name
+		if state != "user" && state != "user_account" {
+			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Picture)
+			for i := 0; i < len(Compte); i++ {
+				if TContent.Uuid == Compte[i].Uuid.String() {
+					TContent.Uuid = Compte[i].Name
+				}
+			}
+			if TContent.Id == IdTopics {
+				result = append(result, TContent)
+			} else {
+				continue
+			}
+		} else {
+			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Picture)
+			if TContent.Uuid == UserActions.Account.Uuid.String() {
+				TContent.Uuid = config.GetName(TContent.Uuid)
+				result = append(result, TContent)
 			}
 		}
-		if TContent.Id == IdTopics {
-			result = append(result, TContent)
-		} else {
-			continue
-		}
+
 	}
 	return result
 }
@@ -536,7 +548,7 @@ func autoconnect() {
 			var compte = readuuid("user_account")
 			Logged.Account = compte[0]
 			Logged.Connected = true
-			fmt.Println("le compte connécté c'est le suivant\n\n", compte)
+			fmt.Println("le compte connecté c'est le suivant\n\n", compte)
 		}
 	}
 

@@ -110,6 +110,7 @@ func HashPassword(passwd string) []byte {
 	has, _ := hash.GenerateFromPassword([]byte(passwd), DefaultCost)
 	return has
 }
+
 //compare given hash and password
 func CheckPasswordHash(password string, hashpass string) bool {
 	var err error = hash.CompareHashAndPassword([]byte(hashpass), []byte(password))
@@ -135,7 +136,8 @@ func (pr *Progress) Write(p []byte) (n int, err error) {
 	//pr.Print()
 	return
 }
-//set the number of like in a topic 
+
+//set the number of like in a topic
 func SetLiker(IdTopics int, UUID string, Like int, Liker string) {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
 	if err != nil {
@@ -149,11 +151,12 @@ func SetLiker(IdTopics int, UUID string, Like int, Liker string) {
 	var liked, result = CheckUuid(Liker, UUID)
 	if liked {
 		stmt.Exec(result, Like+1, IdTopics)
-	}else if !liked {
+	} else if !liked {
 		stmt.Exec(result, Like-1, IdTopics)
 	}
 }
-//set the number of like in a topic 
+
+//set the number of like in a topic
 func SetDisliker(IdTopics int, UUID string, Like int, Liker string) {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
 	if err != nil {
@@ -172,6 +175,7 @@ func SetDisliker(IdTopics int, UUID string, Like int, Liker string) {
 		stmt.Exec(result, Like+1, IdTopics)
 	}
 }
+
 //check if uuid is in string
 func CheckUuid(str string, UUID string) (bool, string) {
 	if str == "" {
@@ -191,6 +195,7 @@ func CheckUuid(str string, UUID string) (bool, string) {
 	}
 	return true, str
 }
+
 //remove element in array with index
 func RemoveIndex(s []string, index int) []string {
 	return append(s[:index], s[index+1:]...)
@@ -201,7 +206,7 @@ func SetLikerint(Liker string, Disliker string, UUID string) int {
 	c, _ := CheckUuid(Disliker, UUID)
 	if b && c {
 		return 0
-	} else if c && !b{
+	} else if c && !b {
 		return 1
 	}
 	return 2

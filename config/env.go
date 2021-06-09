@@ -53,6 +53,12 @@ type TContent struct {
 	Picture string
 }
 
+type UserActions struct {
+	Commentaires []TContent
+	Account      Account
+	Login        LoginYes
+}
+
 //single topics
 type Topics struct {
 	Name     TName
