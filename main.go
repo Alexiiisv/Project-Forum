@@ -45,6 +45,7 @@ func main() {
 	http.HandleFunc("/connect", LoggedOn)
 	http.HandleFunc("/topics", AllTopics)
 	http.HandleFunc("/singleTopics", singleTopics)
+	http.HandleFunc("/DeletCom", Delcom)
 	http.HandleFunc("/user_account", User_Info)
 	http.HandleFunc("/updaccount", updaccount)
 	http.HandleFunc("/user_account_settings", User_Info_set)
@@ -164,6 +165,14 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 	if state == "SwitchMode" {
 		TopicsName.Name.Pic = !TopicsName.Name.Pic
 	}
+	t := template.New("singleTopics-template")
+	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
+	t.ExecuteTemplate(w, "singleTopics", TopicsName)
+}
+
+func Delcom(w http.ResponseWriter, r *http.Request) {
+	config.DeleteComment(r.FormValue("TimeStamps"))
+	TopicsName.Content = GetTopicsContent()
 	t := template.New("singleTopics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "singleTopics", TopicsName)
@@ -433,7 +442,7 @@ func GetTopicsContent() []config.TContent {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sql_readall := `SELECT Id, Uuid, Text, Picture FROM Topics`
+	sql_readall := `SELECT Id, Uuid, Text, Written, Picture FROM Topics`
 
 	rows, err := db.Query(sql_readall)
 	if err != nil {
@@ -445,7 +454,7 @@ func GetTopicsContent() []config.TContent {
 	Compte := readuuid("ShowAccount")
 	for rows.Next() {
 		if state != "user" && state != "user_account" {
-			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Picture)
+			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Written, &TContent.Picture)
 			for i := 0; i < len(Compte); i++ {
 				if TContent.Uuid == Compte[i].Uuid.String() {
 					TContent.Uuid = Compte[i].Name
@@ -457,7 +466,7 @@ func GetTopicsContent() []config.TContent {
 				continue
 			}
 		} else {
-			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Picture)
+			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Written, &TContent.Picture)
 			if TContent.Uuid == UserActions.Account.Uuid.String() {
 				TContent.Uuid = config.GetName(TContent.Uuid)
 				result = append(result, TContent)

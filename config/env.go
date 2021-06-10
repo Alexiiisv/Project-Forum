@@ -19,12 +19,12 @@ type Account struct {
 	Email           string
 	Uuid            uuid.UUID
 	Profile_Picture string
-	Role			string
+	Role            string
 }
 
 type AllAccount struct {
-	Data      []Account
-	Account   LoginYes
+	Data    []Account
+	Account LoginYes
 }
 
 type LoginYes struct {
@@ -50,6 +50,7 @@ type TContent struct {
 	Id      int
 	Uuid    string
 	Text    string
+	Written string
 	Picture string
 }
 
@@ -64,13 +65,13 @@ type Topics struct {
 	Name     TName
 	Content  []TContent
 	Accounts []Account
-	Login  LoginYes
+	Login    LoginYes
 }
 
 //all topics
 type AllTopics struct {
-	Name      []TName
-	Login	  LoginYes
+	Name  []TName
+	Login LoginYes
 }
 
 type Erreur struct {

@@ -249,3 +249,12 @@ func UpdateAccount(UUID string, Name string, Role string) {
 	}
 	stmt.Exec(Name, Role, UUID)
 }
+//set the number of like in a topic 
+func DeleteComment(TimeStamp string) {
+	db, err := sql.Open("sqlite3", "./Database/Topics.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	db.Exec("delete from Topics where Written = ?", TimeStamp)
+}
