@@ -51,7 +51,7 @@ func main() {
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
 	http.HandleFunc("/like", Like)
 	http.HandleFunc("/upload_pp", uploadHandler)
-	err := http.ListenAndServeTLS(config.LocalhostPort, "server.crt", "server.key", nil) // Set listen port
+	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
@@ -70,7 +70,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	autoconnect()
 	t := template.New("index-template")
 	t = template.Must(t.ParseFiles("index.html", "./tmpl/header&footer.html"))
-	t.ExecuteTemplate(w, "index.html", Logged)
+	t.ExecuteTemplate(w, "index", Logged)
 }
 
 //create account
@@ -131,9 +131,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 		})
 		fmt.Println(allTopics.Name)
 	}
-
-	allTopics.Connected = Logged.Connected
-	allTopics.Account = Logged.Account
+	allTopics.Login = Logged
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "topics", allTopics)
@@ -142,9 +140,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 //page accounts
 func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 	allTopics.Name = readtopics()
-	allTopics.Account = Logged.Account
-	allTopics.Connected = Logged.Connected
-	allTopics.Account = Logged.Account
+	allTopics.Login = Logged
 	t := template.New("topics-template")
 	t = template.Must(t.ParseFiles("./tmpl/topics.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "CreateTopicInfo", allTopics)
@@ -162,7 +158,7 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 	yoloo = true
 	TopicsName.Name = GetTopicsData()
 	TopicsName.Name.Liked = config.SetLikerint(TopicsName.Name.Liker, TopicsName.Name.Disliker, UUID)
-	TopicsName.Account = Logged
+	TopicsName.Login = Logged
 	TopicsName.Content = GetTopicsContent()
 	TopicsName.Accounts = readuuid("ShowAccount")
 	if state == "SwitchMode" {

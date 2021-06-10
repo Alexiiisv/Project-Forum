@@ -15,13 +15,14 @@
 </head>
 
 <body>
-    {{template "header" .}}
+    {{template "header" .Login}}
+    {{$Role := .Login.Account.Role}}
     <div class="page-index">
         <div class="title">
             <h1>topics</h1>
             <h2>Show all topics existing on the site</h2>
         </div>
-        {{if .Connected}}
+        {{if .Login.Connected}}
         <div class="inputTopic">
             <form action="/CreateTopicInfo" method="GET">
                 <input type="hidden" value="CreateTopicInfo" name="State">
@@ -90,13 +91,14 @@
 </head>
 
 <body>
-    {{template "header" .Account}}
+    {{template "header" .Login}}
+    {{$Role := .Login.Account.Role}}
     <div class="page-index">
         <div class="title">
             <h1>{{.Name.Title}}</h1>
             <h2>{{.Name.Desc}}</h2>
         </div>
-        {{if .Account.Connected}}
+        {{if .Login.Connected}}
         <div class="Like-container">
             <form action="/like" method="GET">
                 <input type="hidden" value="{{.Name.Like}}" name="Likes">

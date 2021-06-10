@@ -1,9 +1,16 @@
 {{define "SingleTopic"}}
 {{ $length := len .Content}}
+{{$Role := .Login.Account.Role}}
         {{if ge $length 1}}
         <div class="allTopics">
             <div class="topics">
                 {{range .Content}}
+                    {{if eq $Role "Admin"}}
+                    <form action="/DeletCom" method="POST">
+                        <input type="hidden"
+                    </form>
+                    <p>Delete</p>
+                    {{end}}
                     <div class="Topics">
                         <p class="AccName">{{.Uuid}}</p>
                         <p class="border"></p>

@@ -64,14 +64,13 @@ type Topics struct {
 	Name     TName
 	Content  []TContent
 	Accounts []Account
-	Account  LoginYes
+	Login  LoginYes
 }
 
 //all topics
 type AllTopics struct {
 	Name      []TName
-	Connected bool
-	Account   Account
+	Login	  LoginYes
 }
 
 type Erreur struct {
