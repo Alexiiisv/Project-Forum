@@ -78,3 +78,7 @@ type Erreur struct {
 	Connected bool
 	Miss      bool
 }
+
+type RealEmailResponse struct {
+    Status string `json:"status"`
+}

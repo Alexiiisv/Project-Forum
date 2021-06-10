@@ -79,9 +79,13 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	NameChoosen := r.FormValue("Name")
 	Password := r.FormValue("Password")
 	Email = r.FormValue("Email")
-	Dataarray.Data = append(Dataarray.Data, config.Account{Name: NameChoosen, Password: Password, Email: Email, Uuid: config.GetUUID()})
-	saveUuid("accounts")
-	ShowAccount(w, r)
+	if config.Verifmail(Email) {
+		Dataarray.Data = append(Dataarray.Data, config.Account{Name: NameChoosen, Password: Password, Email: Email, Uuid: config.GetUUID()})
+		saveUuid("accounts")
+		ShowAccount(w, r)
+	} else {
+		Register(w, r)
+	}
 }
 
 //create account

@@ -131,12 +131,13 @@
                 <ul>
                     {{range $test, $value := .Commentaires}}
                     {{if lt $test 5}}
-                    <div class="less-essential">
+                    <div class="divtest">
                         <li>{{.Uuid}} : {{index .Text}}</li>
                     </div>
                     {{end}}
                     {{end}}
                 </ul>
+            </div>
             </div>
         </div>
     </div>
