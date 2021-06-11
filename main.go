@@ -38,6 +38,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/accounts", ShowAccount)
 	http.HandleFunc("/login", Login)
+	http.HandleFunc("/settings", Settings)
 	http.HandleFunc("/logout", Logout)
 	http.HandleFunc("/information", Info)
 	http.HandleFunc("/register", Register)
@@ -62,6 +63,12 @@ func Info(w http.ResponseWriter, r *http.Request) {
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Logged)
+}
+
+func Settings(w http.ResponseWriter, r *http.Request) {
+	t := template.New("account-settings")
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "settings", Logged)
 }
 
 //page index
