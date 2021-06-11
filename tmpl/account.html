@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../assets/css/accounts.css">
-    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png">
     <title>Project Forum</title>
 </head>
 
@@ -46,7 +46,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
     <script type="text/javascript" src="../assets/js/AccountPict.js"></script>
-    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png">
     <title>Project Forum</title>
 </head>
 
@@ -66,7 +66,8 @@
                     </div>
                 </div>
                 <div class="less-essential">
-                    <br><p>Email : {{.Account.Email}}</p><br>
+                    <br>
+                    <p>Email : {{.Account.Email}}</p><br>
                     <p>Uuid : {{.Account.Uuid}}</p><br>
                     <p>Role : {{.Account.Role}}</p><br>
                 </div>
@@ -92,7 +93,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
-    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png">
     <title>Project Forum</title>
 </head>
 
@@ -106,9 +107,9 @@
             <h2>Informations about {{.Account.Name}} account</h2>
         </div>
         {{if (and (and (ne $Uuid .Account.Uuid) (eq $Role "Admin")) (ne .Account.Role "Admin"))}}
-            <div class="SettingAd">
-                <a href="/user_account_settings">coucou</a>
-            </div>
+        <div class="SettingAd">
+            <a href="/user_account_settings">coucou</a>
+        </div>
         {{end}}
         <div class="Info">
             <div class="account">
@@ -120,21 +121,23 @@
 
                 </div>
                 <div class="less-essential">
-                    <br><p>Email : {{.Account.Email}}</p><br>
+                    <br>
+                    <p>Email : {{.Account.Email}}</p><br>
                     <p>Role : {{.Account.Role}}</p><br>
                 </div>
                 <ul>
                     {{range $test, $value := .Commentaires}}
                     {{if lt $test 5}}
-                    <div class="less-essential">
+                    <div class="divtest">
                         <li>{{.Uuid}} : {{index .Text}}</li>
                     </div>
                     {{end}}
                     {{end}}
                 </ul>
             </div>
-            
         </div>
+
+    </div>
     </div>
     {{template "footer" .}}
 </body>
@@ -156,7 +159,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
     <script type="text/javascript" src="../assets/js/AccountPict.js"></script>
-    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png">
     <title>Project Forum</title>
 </head>
 
@@ -170,7 +173,8 @@
         <div class="Info">
             <div class="account">
                 <div class="essential">
-                    <h3>{{.Account.Name}}</h3>
+                    <!-- <h3>{{.Account.Name}}</h3> -->
+                    <p>{{.Account.Name}}</p>
                     <div class="container">
                         <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
                     </div>
@@ -180,11 +184,18 @@
                         <input type="submit">
                     </form>
                 </div>
-                <div class="less-essential">
-                    <br><p>Email : {{.Account.Email}}</p><br>
-                    <p>Uuid : {{.Account.Uuid}}</p><br>
-                    <p>Role : {{.Account.Role}}</p><br>
-                </div>
+                <form action="/updateaccount_by_user" method="POST">
+                    <input type="hidden" name="state" value="updcompte">
+                    <input type="hidden" name="Uuid" value="{{.Account.Uuid}}">
+                    <div class="essential">
+                        <br>
+                        <input placeholder="Change your name" name="Name">
+                        <p>Email : {{.Account.Email}}</p><br>
+                        <p>Uuid : {{.Account.Uuid}}</p><br>
+                        <p>Role : {{.Account.Role}}</p><br>
+                    </div>
+                    <input type="submit">
+                </form>
             </div>
         </div>
     </div>
@@ -206,7 +217,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/account.css">
-    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png"> 
+    <link rel="icon" sizes="16x16" href="./assets/image/Icon/Logo.png">
     <title>Project Forum</title>
 </head>
 
@@ -220,30 +231,32 @@
         <form action="/updaccount" method="POST">
             <input type="hidden" name="state" value="updcompte">
             <input type="hidden" name="Uuid" value="{{.Account.Uuid}}">
-        <div class="Info">
-            <div class="account">
-                <div class="essential">
-                    <input value="{{.Account.Name}}" name="Name">
-                    <div class="container">
-                        <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
+            <div class="Info">
+                <div class="account">
+                    <div class="essential">
+                        <input value="{{.Account.Name}}" name="Name">
+                        <div class="container">
+                            <img class="pp" src="..\assets\image\Account_pp\{{.Account.Profile_Picture}}" />
+                        </div>
+
+                    </div>
+                    <div class="less-essential">
+                        <br>
+                        <p>Email : {{.Account.Email}}</p><br>
+                        <select name="Role">
+                            <option value="Admin">Admin</option>
+                            <option value="Moderator">Moderator</option>
+                            <option value="User" selected>User</option>
+                        </select>
+                        <br>
+                        <p>Role : {{.Account.Role}}</p><br>
                     </div>
 
                 </div>
-                <div class="less-essential">
-                    <br><p>Email : {{.Account.Email}}</p><br>
-                    <select name="Role">
-                        <option value="Admin">Admin</option>
-                        <option value="Moderator">Moderator</option>
-                        <option value="User" selected>User</option>
-                    </select>
-                    <br><p>Role : {{.Account.Role}}</p><br>
-                </div>
-                
+
             </div>
-            
-        </div>
-        <input type="submit">
-    </form>
+            <input type="submit">
+        </form>
     </div>
     {{template "footer" .}}
 </body>

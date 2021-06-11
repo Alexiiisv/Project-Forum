@@ -7,9 +7,9 @@
                 {{range .Content}}
                     {{if eq $Role "Admin"}}
                     <form action="/DeletCom" method="POST">
-                        <input type="hidden"
+                        <input type="hidden" value="{{.Written}}" name="TimeStamps">
+                        <input type="submit" name="Delete">
                     </form>
-                    <p>Delete</p>
                     {{end}}
                     <div class="Topics">
                         <p class="AccName">{{.Uuid}}</p>
