@@ -59,6 +59,29 @@ h1, h2 {
     align-content: center;
     flex-direction: column;
 }
+.formcom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.divsCom {
+    display: flex;
+    flex-direction: column;
+}
+.less-essential2 {
+    width: 95%;
+    margin: 20px 20px 20px 20px;
+    border: solid 2px black;
+    border-radius: 10px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
 
 .essential {
     margin: 150px 0px 120px 0px;

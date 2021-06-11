@@ -128,15 +128,7 @@
                     <br><p>Email : {{.Account.Email}}</p><br>
                     <p>Role : {{.Account.Role}}</p><br>
                 </div>
-                <ul>
-                    {{range $test, $value := .Commentaires}}
-                    {{if lt $test 5}}
-                    <div class="less-essential">
-                        <li>{{.Uuid}} : {{index .Text}}</li>
-                    </div>
-                    {{end}}
-                    {{end}}
-                </ul>
+                {{template "ComAccount" .}}
             </div>
         </div>
     </div>

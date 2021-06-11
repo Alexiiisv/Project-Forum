@@ -5,10 +5,10 @@
         <div class="allTopics">
             <div class="topics">
                 {{range .Content}}
-                    {{if eq $Role "Admin"}}
-                    <form action="/DeletCom" method="POST">
+                    {{if or (eq $Role "Admin") (eq $Role "Moderator")}}
+                    <form action="/DeletCom" method="POST" class="DeletCom">
                         <input type="hidden" value="{{.Written}}" name="TimeStamps">
-                        <input type="submit" name="Delete">
+                        <input type="submit" value="Delete">
                     </form>
                     {{end}}
                     <div class="Topics">
@@ -82,4 +82,22 @@
             </div>
         </div>
         {{end}}
+{{end}}
+
+{{define "ComAccount"}}
+<div class="divsCom">
+    {{range $test, $value := .Commentaires}}
+    {{if lt $test 5}}
+    <form action="/singleTopics" method="POST" class="formcom">
+        <input type="hidden" name="IdTopics" value="{{.Id}}">
+        <input type="hidden" name="State" value="SingleTopic">
+        <div class="less-essential2">
+            <p>{{.Uuid}} : {{index .Text}}</p>
+        </div>
+        <input type="submit">
+    </form>
+    
+    {{end}}
+    {{end}}
+</div>
 {{end}}

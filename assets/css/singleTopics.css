@@ -28,7 +28,7 @@ body, * {
     margin-bottom: 3%;
 }
 .Topics {
-    margin: 15px 15px 15px 15px;
+    margin: 10px 15px 15px 15px;
     border-radius: 10px;
     min-height: 100px;
     display: flex;
@@ -67,6 +67,10 @@ body, * {
 .border {
     border: black 1px solid;
     height: 100px;
+}
+.DeletCom {
+    padding-top: 5px;
+    margin-left: 16px;
 }
 .inputTopic {
     text-align: center;

@@ -149,18 +149,20 @@ func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 
 //page accounts
 func singleTopics(w http.ResponseWriter, r *http.Request) {
-	state := r.FormValue("State")
+	state = r.FormValue("State")
 	IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
 	stateSingleTopics, _ = strconv.ParseBool(r.FormValue("StateBool"))
 	if state == "PostTopic" && yoloo {
 		TopicText = r.FormValue("text")
-		config.SetTopicText("PostTopic", IdTopics, Logged.Account.Uuid.String(), TopicText, "")
+		config.SetTopicText(IdTopics, Logged.Account.Uuid.String(), TopicText, "")
 	}
+	
 	yoloo = true
 	TopicsName.Name = GetTopicsData()
 	TopicsName.Name.Liked = config.SetLikerint(TopicsName.Name.Liker, TopicsName.Name.Disliker, UUID)
 	TopicsName.Login = Logged
 	TopicsName.Content = GetTopicsContent()
+	fmt.Println(state)
 	TopicsName.Accounts = readuuid("ShowAccount")
 	if state == "SwitchMode" {
 		TopicsName.Name.Pic = !TopicsName.Name.Pic
@@ -190,9 +192,12 @@ func User_Info(w http.ResponseWriter, r *http.Request) {
 	}
 	UserActions.Account = readuuid(state)[0]
 	UserActions.Commentaires = GetTopicsContent()
-	fmt.Println(UserActions.Account.Role)
+	if len(UserActions.Commentaires) > 5 {
+		UserActions.Commentaires = UserActions.Commentaires[len(UserActions.Commentaires)-5:]
+	}
+	fmt.Println(state)
 	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "user_account", UserActions)
 }
 
@@ -271,7 +276,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 32 MB is the default used by FormFile
-	if err := r.ParseMultipartForm(32 << 20); err != nil {
+	if err := r.ParseMultipartForm(20 << 20); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -340,7 +345,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.FormValue("State") == "PostTopic" {
 		var id, _ = strconv.Atoi(r.FormValue("IdTopics"))
-		config.SetTopicText("PostTopic", id, Logged.Account.Uuid.String(), r.FormValue("text"), pp_name+".png")
+		config.SetTopicText(id, Logged.Account.Uuid.String(), r.FormValue("text"), pp_name+".png")
 		state = ""
 		yoloo = false
 		singleTopics(w, r)
@@ -453,7 +458,7 @@ func GetTopicsContent() []config.TContent {
 	var result []config.TContent
 	Compte := readuuid("ShowAccount")
 	for rows.Next() {
-		if state != "user" && state != "user_account" {
+		if state == "SingleTopic" || state == "PostTopic" {
 			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Written, &TContent.Picture)
 			for i := 0; i < len(Compte); i++ {
 				if TContent.Uuid == Compte[i].Uuid.String() {
