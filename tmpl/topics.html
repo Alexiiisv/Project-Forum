@@ -30,12 +30,12 @@
             </form>
         </div>
         {{else}}
-        <div class="connectinput">you must be connected with an <a href="/login"><b>account</b></a> to be able to write
+        <div class="connectinput">you must be connected with an <a href="/login"><b>account</b></a> to be able to write<br>
             a comment</div>
         {{end}}
         <div class="sort">
             <div class="filter">
-                <p class="selectFilter">Filter the topics</p>
+                <p class="selectFilter">Filter the topics by</p>
                 <select class="selectFilter" id="select" onchange="select();">
                     <option value="All the topics">All the topics</option>
                     <option value="Info">Info</option>
@@ -51,11 +51,13 @@
                 </select>
             </div>
             <div class="BySorting">
-                <p class="BySortingText">Filter the topics</p>
+                <p class="BySortingText">or</p>
                 <div class="ByInput">
+                    <div class="buttonlike">
                     <form action="/topics" method="GET">
                     <input type="submit" value="ByLike" name="ByLikeSub">
                 </form>
+                    </div>
                 <form action="/topics" method="GET">
                     <input type="submit" value="ByCreationDate" name="ByCreationDateSub">
                 </form>

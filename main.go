@@ -38,6 +38,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/accounts", ShowAccount)
 	http.HandleFunc("/login", Login)
+	http.HandleFunc("/settings", Settings)
 	http.HandleFunc("/logout", Logout)
 	http.HandleFunc("/information", Info)
 	http.HandleFunc("/register", Register)
@@ -48,6 +49,7 @@ func main() {
 	http.HandleFunc("/DeletCom", Delcom)
 	http.HandleFunc("/user_account", User_Info)
 	http.HandleFunc("/updaccount", updaccount)
+	http.HandleFunc("/updateaccount_by_user", UpdateAccountByUser)
 	http.HandleFunc("/user_account_settings", User_Info_set)
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
 	http.HandleFunc("/like", Like)
@@ -65,6 +67,12 @@ func Info(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "account", Logged)
 }
 
+func Settings(w http.ResponseWriter, r *http.Request) {
+	t := template.New("account-settings")
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t.ExecuteTemplate(w, "settings", Logged)
+}
+
 //page index
 func index(w http.ResponseWriter, r *http.Request) {
 	request = r
@@ -79,9 +87,13 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	NameChoosen := r.FormValue("Name")
 	Password := r.FormValue("Password")
 	Email = r.FormValue("Email")
-	Dataarray.Data = append(Dataarray.Data, config.Account{Name: NameChoosen, Password: Password, Email: Email, Uuid: config.GetUUID()})
-	saveUuid("accounts")
-	ShowAccount(w, r)
+	if config.Verifmail(Email) {
+		Dataarray.Data = append(Dataarray.Data, config.Account{Name: NameChoosen, Password: Password, Email: Email, Uuid: config.GetUUID()})
+		saveUuid("accounts")
+		ShowAccount(w, r)
+	} else {
+		Register(w, r)
+	}
 }
 
 //create account
@@ -92,6 +104,15 @@ func updaccount(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(NameUpdated, Role, UUID)
 	config.UpdateAccount(UUID, NameUpdated, Role)
 	ShowAccount(w, r)
+}
+
+func UpdateAccountByUser(w http.ResponseWriter, r *http.Request) {
+	NameUpdated := r.FormValue("Name")
+	UUID = r.FormValue("Uuid")
+	fmt.Println(NameUpdated, Role, UUID)
+	config.UpdateAccount(UUID, NameUpdated, Role)
+	ShowAccount(w, r)
+
 }
 
 //page accounts
@@ -115,6 +136,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 		SetTopicsDescription = r.FormValue("Description")
 		Category = config.GetCategory(r)
 		config.SetTopicInfo(state, SetTopicsName, SetTopicsDescription, Category, Logged.Account.Uuid.String())
+		http.Redirect(w, r, "/topics", 301)
 	}
 	allTopics.Name = readtopics()
 	fmt.Println(allTopics.Name)
@@ -155,6 +177,8 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 	if state == "PostTopic" && yoloo {
 		TopicText = r.FormValue("text")
 		config.SetTopicText(IdTopics, Logged.Account.Uuid.String(), TopicText, "")
+		urltest := "/singleTopics?IdTopics=" + strconv.Itoa(IdTopics) + "&State=SingleTopic"
+		http.Redirect(w, r, urltest, 301)
 	}
 	
 	yoloo = true
@@ -354,7 +378,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		saveUuid(state)
 		Info(w, r)
 	}
-
 }
 
 //read database/store value from database to go code

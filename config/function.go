@@ -8,6 +8,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"io/ioutil"
+	"encoding/json"
+	"net/url"
 
 	uuid "github.com/gofrs/uuid"
 
@@ -255,4 +258,36 @@ func DeleteComment(TimeStamp string) {
 	}
 	defer db.Close()
 	db.Exec("delete from Topics where Written = ?", TimeStamp)
+}
+func Verifmail(email string) bool{
+	apiKey := "2783ca62-8461-42a4-a05e-816779066859"
+
+	url := "https://isitarealemail.com/api/email/validate?email=" + url.QueryEscape(email)
+
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("Authorization", "bearer " + apiKey)
+
+	res, err := http.DefaultClient.Do(req)
+	
+	if err != nil {
+	fmt.Println(err)
+		return false
+	}
+
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		fmt.Printf("error %v", err)
+		return false
+	}
+	if res.StatusCode != 200 {
+		fmt.Printf("unexpected result, check your api key. %v", res.Status)
+		return false
+	}
+	
+	var myJson RealEmailResponse
+	json.Unmarshal(body, &myJson)
+	
+	fmt.Printf("status for %v is %v", email, myJson.Status)	
+	return myJson.Status == "valid"
 }
