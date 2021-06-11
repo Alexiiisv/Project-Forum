@@ -136,6 +136,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 		SetTopicsDescription = r.FormValue("Description")
 		Category = config.GetCategory(r)
 		config.SetTopicInfo(state, SetTopicsName, SetTopicsDescription, Category, Logged.Account.Uuid.String())
+		http.Redirect(w, r, "/topics", 301)
 	}
 	allTopics.Name = readtopics()
 	fmt.Println(allTopics.Name)
@@ -176,6 +177,8 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 	if state == "PostTopic" && yoloo {
 		TopicText = r.FormValue("text")
 		config.SetTopicText("PostTopic", IdTopics, Logged.Account.Uuid.String(), TopicText, "")
+		urltest := "/singleTopics?IdTopics=" + strconv.Itoa(IdTopics) 
+		http.Redirect(w, r, urltest, 301)
 	}
 	yoloo = true
 	TopicsName.Name = GetTopicsData()
