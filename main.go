@@ -62,12 +62,16 @@ func main() {
 
 //page account information
 func Info(w http.ResponseWriter, r *http.Request) {
+	Dataarray.Data = readuuid("LoggedOn")
+	Logged.Account = Dataarray.Data[0]
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Logged)
 }
 
 func Settings(w http.ResponseWriter, r *http.Request) {
+	Dataarray.Data = readuuid("LoggedOn")
+	Logged.Account = Dataarray.Data[0]
 	t := template.New("account-settings")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "settings", Logged)
