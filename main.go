@@ -26,7 +26,7 @@ var allTopics config.AllTopics
 var UserActions config.UserActions
 var Logged config.LoginYes
 var state, Role, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name string
-var cookieonce, stateSingleTopics, yoloo bool
+var cookieonce, stateSingleTopics bool
 
 var IdTopics, Likes int
 var request *http.Request
@@ -174,19 +174,18 @@ func singleTopics(w http.ResponseWriter, r *http.Request) {
 	state = r.FormValue("State")
 	IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
 	stateSingleTopics, _ = strconv.ParseBool(r.FormValue("StateBool"))
-	if state == "PostTopic" && yoloo {
+	if state == "PostTopic" {
 		TopicText = r.FormValue("text")
 		config.SetTopicText(IdTopics, Logged.Account.Uuid.String(), TopicText, "")
 		urltest := "/singleTopics?IdTopics=" + strconv.Itoa(IdTopics) + "&State=SingleTopic"
 		http.Redirect(w, r, urltest, 301)
-	}
-	
-	yoloo = true
+	}	
 	TopicsName.Name = GetTopicsData()
 	TopicsName.Name.Liked = config.SetLikerint(TopicsName.Name.Liker, TopicsName.Name.Disliker, UUID)
 	TopicsName.Login = Logged
+	UserActions.Account = readuuid("user_account")[0]
+	fmt.Println(IdTopics)
 	TopicsName.Content = GetTopicsContent()
-	fmt.Println(state)
 	TopicsName.Accounts = readuuid("ShowAccount")
 	if state == "SwitchMode" {
 		TopicsName.Name.Pic = !TopicsName.Name.Pic
@@ -371,7 +370,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		var id, _ = strconv.Atoi(r.FormValue("IdTopics"))
 		config.SetTopicText(id, Logged.Account.Uuid.String(), r.FormValue("text"), pp_name+".png")
 		state = ""
-		yoloo = false
 		singleTopics(w, r)
 	} else {
 		state := "pp"
@@ -481,11 +479,12 @@ func GetTopicsContent() []config.TContent {
 	var result []config.TContent
 	Compte := readuuid("ShowAccount")
 	for rows.Next() {
-		if state == "SingleTopic" || state == "PostTopic" {
+		if state == "SingleTopic" || state == "PostTopic" || state == "SwitchMode" {
 			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Written, &TContent.Picture)
 			for i := 0; i < len(Compte); i++ {
 				if TContent.Uuid == Compte[i].Uuid.String() {
-					TContent.Uuid = Compte[i].Name
+					TContent.Name = Compte[i].Name
+					break
 				}
 			}
 			if TContent.Id == IdTopics {
@@ -496,7 +495,7 @@ func GetTopicsContent() []config.TContent {
 		} else {
 			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Written, &TContent.Picture)
 			if TContent.Uuid == UserActions.Account.Uuid.String() {
-				TContent.Uuid = config.GetName(TContent.Uuid)
+				TContent.Name = config.GetName(TContent.Uuid)
 				result = append(result, TContent)
 			}
 		}
@@ -581,6 +580,7 @@ func autoconnect() {
 			var compte = readuuid("user_account")
 			Logged.Account = compte[0]
 			Logged.Connected = true
+			UserActions.Login = Logged
 			fmt.Println("le compte connecté c'est le suivant\n\n", compte)
 		}
 	}

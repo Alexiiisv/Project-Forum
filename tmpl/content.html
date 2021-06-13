@@ -1,25 +1,26 @@
 {{define "SingleTopic"}}
 {{ $length := len .Content}}
 {{$Role := .Login.Account.Role}}
-        {{if ge $length 1}}
-        <div class="allTopics">
-            <div class="topics">
-                {{range .Content}}
-                    {{if or (eq $Role "Admin") (eq $Role "Moderator")}}
-                    <form action="/DeletCom" method="POST" class="DeletCom">
-                        <input type="hidden" value="{{.Written}}" name="TimeStamps">
-                        <input type="submit" value="Delete">
-                    </form>
-                    {{end}}
-                    <div class="Topics">
-                        <p class="AccName">{{.Uuid}}</p>
-                        <p class="border"></p>
-                        <p class="AccText">{{.Text}}</p>
-                        {{if ne .Picture ""}}<a href="../assets/image/post/{{.Picture}}">Linked pick</a>{{end}} <!-- add a link if the comment come with a picture -->
-                    </div>
+{{if ge $length 1}}
+    <div class="allTopics">
+        <div class="topics">
+            {{range .Content}}
+                {{if or (eq $Role "Admin") (eq $Role "Moderator")}}
+                <form action="/DeletCom" method="POST" class="DeletCom">
+                    <input type="hidden" value="{{.Written}}" name="TimeStamps">
+                    <input type="submit" value="Delete">
+                </form>
                 {{end}}
-            </div>
+                <div class="Topics">
+                    
+                    <a href="/user_account?Uuid={{.Uuid}}&state=user_account" class="AccName">{{.Name}}</a>
+                    <p class="border"></p>
+                    <p class="AccText">{{.Text}}</p>
+                    {{if ne .Picture ""}}<a href="../assets/image/post/{{.Picture}}">Linked pick</a>{{end}} <!-- add a link if the comment come with a picture -->
+                </div>
+            {{end}}
         </div>
+    </div>
 {{else}}
 <div class="noComment">
     <p>There is no comment in this topic right now</p><br>

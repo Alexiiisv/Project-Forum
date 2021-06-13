@@ -233,7 +233,7 @@ h1, h2, h3, h4, h5, h6 :not(testttt) {
 .divtest {
     animation: fadeIn 1.5s;
     width: 350px;
-    margin: 20px 20px 20px 20px;
+    margin: 135px 20px 20px 20px;
     border: solid 2px black;
     border-radius: 10px;
     min-height: 100px;

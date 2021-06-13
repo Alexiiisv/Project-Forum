@@ -49,6 +49,7 @@ type TName struct {
 type TContent struct {
 	Id      int
 	Uuid    string
+	Name    string
 	Text    string
 	Written string
 	Picture string
