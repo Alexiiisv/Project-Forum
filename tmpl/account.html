@@ -165,6 +165,7 @@
         <div class="Info">
             <div class="account">
                 <div class="essential">
+                    <br>
                     <!-- <h3>{{.Account.Name}}</h3> -->
                     <p>{{.Account.Name}}</p>
                     <div class="container">
@@ -182,11 +183,23 @@
                     <div class="essential">
                         <br>
                         <input placeholder="Change your name" name="Name">
-                        <p>Email : {{.Account.Email}}</p><br>
-                        <p>Uuid : {{.Account.Uuid}}</p><br>
-                        <p>Role : {{.Account.Role}}</p><br>
+                        <p>Email : {{.Account.Email}}</p>
+                        <p>Uuid : {{.Account.Uuid}}</p>
+                        <p>Role : {{.Account.Role}}</p>
+                        <input type="submit">
                     </div>
-                    <input type="submit">
+                </form>
+                
+                <form method="GET" action="/change_passwd">
+                    <div class="essential">
+                        <br>
+                        <input type="hidden" name="State" value="changepasswd">
+                        <input placeholder="Type your current password" type="password" name="current_passwd">
+                        <input placeholder="Type your new password" type="password" name="new_passwd1">
+                        <input placeholder="Re-type your new password" type="password" name="new_passwd2">
+                        <input type="submit">
+                     </div>
+                    
                 </form>
             </div>
         </div>

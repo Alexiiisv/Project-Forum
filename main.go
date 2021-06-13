@@ -25,7 +25,7 @@ var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var UserActions config.UserActions
 var Logged config.LoginYes
-var state, Role, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name string
+var state, Role, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name, NewPassword1 string
 var cookieonce, stateSingleTopics bool
 
 var IdTopics, Likes int
@@ -54,6 +54,7 @@ func main() {
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
 	http.HandleFunc("/like", Like)
 	http.HandleFunc("/upload_pp", uploadHandler)
+	http.HandleFunc("/change_passwd", ChangePasswd)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -62,12 +63,16 @@ func main() {
 
 //page account information
 func Info(w http.ResponseWriter, r *http.Request) {
+	Dataarray.Data = readuuid("LoggedOn")
+	Logged.Account = Dataarray.Data[0]
 	t := template.New("account-template")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "account", Logged)
 }
 
 func Settings(w http.ResponseWriter, r *http.Request) {
+	Dataarray.Data = readuuid("LoggedOn")
+	Logged.Account = Dataarray.Data[0]
 	t := template.New("account-settings")
 	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
 	t.ExecuteTemplate(w, "settings", Logged)
@@ -113,6 +118,19 @@ func UpdateAccountByUser(w http.ResponseWriter, r *http.Request) {
 	config.UpdateAccount(UUID, NameUpdated, Role)
 	ShowAccount(w, r)
 
+}
+
+func ChangePasswd(w http.ResponseWriter, r *http.Request) {
+	state = r.FormValue("State")
+	Password = r.FormValue("current_passwd")
+	NewPassword1 = r.FormValue("new_passwd1")
+	NewPassword2 := r.FormValue("new_passwd2")
+
+	if NewPassword1 == NewPassword2 {
+		saveUuid(state)
+		Password = r.FormValue("new_passwd1")
+	}
+	http.Redirect(w, r, "/information", 301)
 }
 
 //page accounts
@@ -263,7 +281,8 @@ func LoggedOn(w http.ResponseWriter, r *http.Request) {
 		Logged.Connected = true
 		UUID = Dataarray.Data[0].Uuid.String()
 		cookie(w, "Uuid", Dataarray.Data[0].Uuid.String(), 86400)
-		index(w, r)
+		http.Redirect(w, r, "/information", 301)
+
 	} else {
 		state = "login"
 		Login(w, r)
@@ -544,6 +563,11 @@ func saveUuid(state string) {
 		link += ".png"
 		Logged.Account.Profile_Picture = link
 		stmt.Exec(link, Logged.Account.Uuid.String())
+	} else if state == "changepasswd" {
+		stmt, _ := db.Prepare("update Accounts set Password = ? where Uuid = ?")
+		NewPassword1 = string(config.HashPassword(NewPassword1))
+		stmt.Exec(NewPassword1, Logged.Account.Uuid.String())
+
 	}
 }
 
