@@ -51,20 +51,18 @@ func SetTopicInfo(state string, SetTopicsName string, SetTopicsDescription strin
 }
 
 //Set in a database the text written in a topic
-func SetTopicText(state string, IdTopics int, Uuid string, TopicText string, pp string) {
+func SetTopicText(IdTopics int, Uuid string, TopicText string, pp string) {
 	db, err := sql.Open("sqlite3", "./Database/Topics.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	if state == "PostTopic" {
 		stmt, err := db.Prepare("insert into Topics(Id, Uuid, Text, Written, Picture) values(?, ?, ?, ?, ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
 		stmt.Exec(IdTopics, Uuid, TopicText, time.Now().Format(time.ANSIC), pp)
-	}
 }
 
 //give a unique uuid to a user

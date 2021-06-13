@@ -25,7 +25,7 @@ var Dataarray config.AllAccount
 var allTopics config.AllTopics
 var UserActions config.UserActions
 var Logged config.LoginYes
-var state, Role, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name string
+var state, Role, Name, Password, Email, TopicText, UUID, SetTopicsName, SetTopicsDescription, info, Category, pp_name, NewPassword1 string
 var cookieonce, stateSingleTopics, yoloo bool
 
 var IdTopics, Likes int
@@ -54,6 +54,7 @@ func main() {
 	http.HandleFunc("/CreateTopicInfo", CreateTopicInfo)
 	http.HandleFunc("/like", Like)
 	http.HandleFunc("/upload_pp", uploadHandler)
+	http.HandleFunc("/change_passwd", ChangePasswd)
 	err := http.ListenAndServe(config.LocalhostPort, nil) // Set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -119,6 +120,19 @@ func UpdateAccountByUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func ChangePasswd(w http.ResponseWriter, r *http.Request) {
+	state = r.FormValue("State")
+	Password = r.FormValue("current_passwd")
+	NewPassword1 = r.FormValue("new_passwd1")
+	NewPassword2 := r.FormValue("new_passwd2")
+
+	if NewPassword1 == NewPassword2 {
+		saveUuid(state)
+		Password = r.FormValue("new_passwd1")
+	}
+	http.Redirect(w, r, "/information", 301)
+}
+
 //page accounts
 func ShowAccount(w http.ResponseWriter, r *http.Request) {
 	request = r
@@ -140,6 +154,7 @@ func AllTopics(w http.ResponseWriter, r *http.Request) {
 		SetTopicsDescription = r.FormValue("Description")
 		Category = config.GetCategory(r)
 		config.SetTopicInfo(state, SetTopicsName, SetTopicsDescription, Category, Logged.Account.Uuid.String())
+		http.Redirect(w, r, "/topics", 301)
 	}
 	allTopics.Name = readtopics()
 	fmt.Println(allTopics.Name)
@@ -174,18 +189,22 @@ func CreateTopicInfo(w http.ResponseWriter, r *http.Request) {
 
 //page accounts
 func singleTopics(w http.ResponseWriter, r *http.Request) {
-	state := r.FormValue("State")
+	state = r.FormValue("State")
 	IdTopics, _ = strconv.Atoi(r.FormValue("IdTopics"))
 	stateSingleTopics, _ = strconv.ParseBool(r.FormValue("StateBool"))
 	if state == "PostTopic" && yoloo {
 		TopicText = r.FormValue("text")
-		config.SetTopicText("PostTopic", IdTopics, Logged.Account.Uuid.String(), TopicText, "")
+		config.SetTopicText(IdTopics, Logged.Account.Uuid.String(), TopicText, "")
+		urltest := "/singleTopics?IdTopics=" + strconv.Itoa(IdTopics) + "&State=SingleTopic"
+		http.Redirect(w, r, urltest, 301)
 	}
+
 	yoloo = true
 	TopicsName.Name = GetTopicsData()
 	TopicsName.Name.Liked = config.SetLikerint(TopicsName.Name.Liker, TopicsName.Name.Disliker, UUID)
 	TopicsName.Login = Logged
 	TopicsName.Content = GetTopicsContent()
+	fmt.Println(state)
 	TopicsName.Accounts = readuuid("ShowAccount")
 	if state == "SwitchMode" {
 		TopicsName.Name.Pic = !TopicsName.Name.Pic
@@ -215,9 +234,12 @@ func User_Info(w http.ResponseWriter, r *http.Request) {
 	}
 	UserActions.Account = readuuid(state)[0]
 	UserActions.Commentaires = GetTopicsContent()
-	fmt.Println(UserActions.Account.Role)
+	if len(UserActions.Commentaires) > 5 {
+		UserActions.Commentaires = UserActions.Commentaires[len(UserActions.Commentaires)-5:]
+	}
+	fmt.Println(state)
 	t := template.New("account-template")
-	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html"))
+	t = template.Must(t.ParseFiles("./tmpl/account.html", "./tmpl/header&footer.html", "./tmpl/content.html"))
 	t.ExecuteTemplate(w, "user_account", UserActions)
 }
 
@@ -260,7 +282,8 @@ func LoggedOn(w http.ResponseWriter, r *http.Request) {
 		Logged.Connected = true
 		UUID = Dataarray.Data[0].Uuid.String()
 		cookie(w, "Uuid", Dataarray.Data[0].Uuid.String(), 86400)
-		index(w, r)
+		http.Redirect(w, r, "/information", 301)
+
 	} else {
 		state = "login"
 		Login(w, r)
@@ -296,7 +319,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 32 MB is the default used by FormFile
-	if err := r.ParseMultipartForm(32 << 20); err != nil {
+	if err := r.ParseMultipartForm(20 << 20); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -365,7 +388,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.FormValue("State") == "PostTopic" {
 		var id, _ = strconv.Atoi(r.FormValue("IdTopics"))
-		config.SetTopicText("PostTopic", id, Logged.Account.Uuid.String(), r.FormValue("text"), pp_name+".png")
+		config.SetTopicText(id, Logged.Account.Uuid.String(), r.FormValue("text"), pp_name+".png")
 		state = ""
 		yoloo = false
 		singleTopics(w, r)
@@ -477,7 +500,7 @@ func GetTopicsContent() []config.TContent {
 	var result []config.TContent
 	Compte := readuuid("ShowAccount")
 	for rows.Next() {
-		if state != "user" && state != "user_account" {
+		if state == "SingleTopic" || state == "PostTopic" {
 			rows.Scan(&TContent.Id, &TContent.Uuid, &TContent.Text, &TContent.Written, &TContent.Picture)
 			for i := 0; i < len(Compte); i++ {
 				if TContent.Uuid == Compte[i].Uuid.String() {
@@ -541,6 +564,11 @@ func saveUuid(state string) {
 		link += ".png"
 		Logged.Account.Profile_Picture = link
 		stmt.Exec(link, Logged.Account.Uuid.String())
+	} else if state == "changepasswd" {
+		stmt, _ := db.Prepare("update Accounts set Password = ? where Uuid = ?")
+		NewPassword1 = string(config.HashPassword(NewPassword1))
+		stmt.Exec(NewPassword1, Logged.Account.Uuid.String())
+
 	}
 }
 
